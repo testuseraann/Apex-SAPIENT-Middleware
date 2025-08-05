@@ -13,7 +13,7 @@ from uuid import UUID
 
 from google.protobuf.descriptor import FieldDescriptor
 from google.protobuf.message import Message
-from google.protobuf.unknown_fields import UnknownFieldSet
+# from google.protobuf.unknown_fields import UnknownFieldSet
 
 from sapient_msg import proto_options_pb2
 

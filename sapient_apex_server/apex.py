@@ -136,12 +136,19 @@ async def lifespan(app: FastAPI):
     apex.shutdown()
     logger.info("* * * * Shutdown complete * * * *")
     time.sleep(1)  # So above message can be seen
-
-
+    
+# Removed metadta
+# app = FastAPI(
+#     title="Apex REST API",
+#     description=f"""REST API to the {metadata("apex")["summary"]}""",
+#     version=metadata("apex")["version"],
+#     lifespan=lifespan,
+# )
+# app.include_router(router)
 app = FastAPI(
     title="Apex REST API",
-    description=f"""REST API to the {metadata("apex")["summary"]}""",
-    version=metadata("apex")["version"],
+    description="REST API to the Apex Middleware",
+    version="1.0.0",
     lifespan=lifespan,
 )
 app.include_router(router)
