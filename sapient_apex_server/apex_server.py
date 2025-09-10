@@ -184,11 +184,13 @@ class ApexServer:
                 return e  # But not if a BaseException, most likely trio.Cancelled
 
         try:
-            with trio.MultiError.catch(exception_handler):
-                async with trio.open_nursery() as nursery:
-                    nursery.start_soon(buffered_writer.perform_writes)
-                    nursery.start_soon(read_to_channel)
-                    nursery.start_soon(read_from_channel)
+            # with trio.MultiError.catch(exception_handler):
+            async with trio.open_nursery() as nursery:
+                nursery.start_soon(buffered_writer.perform_writes)
+                nursery.start_soon(read_to_channel)
+                nursery.start_soon(read_from_channel)
+        except* Exception as exc:
+            exception_handler
         finally:
             if read_buffer:
                 if len(read_buffer) > 40:
@@ -206,28 +208,37 @@ class ApexServer:
                 await stream.aclose()
 
     async def _do_run(self):
-        with self.top_level_cancel_scope:
-            async with trio.open_nursery() as nursery:
-                assert isinstance(nursery, trio.Nursery)
-                for connection_config in self.config["connections"]:
-                    # Start by binding connection config to parameter of self.serve() function
-                    handler = functools.partial(self.serve, connection_config=connection_config)
-                    if connection_config.get("outbound"):
-                        # Open outbound socket connection
-                        nursery.start_soon(
-                            connect_tcp_repeatedly,
-                            handler,
-                            connection_config["host"],
-                            connection_config["port"],
-                        )
-                    else:
-                        # Open the socket for listening
-                        # Use nursery.start rather than nursery.start_soon to make sure the port
-                        # is open before on_startup_complete is called
-                        await nursery.start(trio.serve_tcp, handler, connection_config["port"])
+        try:
+            with self.top_level_cancel_scope:
+                async with trio.open_nursery() as nursery:
+                    assert isinstance(nursery, trio.Nursery)
+                    for connection_config in self.config["connections"]:
+                        port = connection_config["port"]
+                        logger.info(f"Start listening to port {port}")
+                        # Start by binding connection config to parameter of self.serve() function
+                        handler = functools.partial(self.serve, connection_config=connection_config)
+                        if connection_config.get("outbound"):
+                            # Open outbound socket connection
+                            nursery.start_soon(
+                                connect_tcp_repeatedly,
+                                handler,
+                                connection_config["host"],
+                                connection_config["port"],
+                            )
+                        else:
+                            # Open the socket for listening
+                            # Use nursery.start rather than nursery.start_soon to make sure the port
+                            # is open before on_startup_complete is called
+                            await nursery.start(trio.serve_tcp, handler, connection_config["port"])
 
                 # Set startup as complete
                 self.callbacks.on_startup_complete.set()
+
+        except Exception as e:
+            for exc in e.exceptions:
+                print("Sub-exception:", exc)
+            print("Other exception: ", e, f"(port {port})")
+
 
     def run(self):
         trio.run(self._do_run)
