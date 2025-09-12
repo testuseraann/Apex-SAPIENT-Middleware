@@ -72,7 +72,7 @@ def parse_proto(
         validate_message_with_all_sapient_versions = False
         # Enable flag to do more robust Message Conversion/validation Testing, with
         # Real/Simulated ASMs even if there are no configured ports needing that particular format.
-        # Done by by intercepting all messages and trying to convert them. Errors are
+        # Done by by intercepting all messages and trying to convert thto_versionem. Errors are
         # only logged to the console for a ASM/Middleware developer to investigate further.
         if validate_message_with_all_sapient_versions:
             for final_version in [SapientVersion.LOWEST_PROTO, SapientVersion.LATEST]:
@@ -110,8 +110,9 @@ def parse_proto(
                 xml_declaration=True,
             )
         except Exception as e:
-            result.error = NoisyError(f"TranslationError: {e}")
-            return result
+            print(f'skip translation v1 error. TranslationError: {e}')
+            # result.error = NoisyError(f"TranslationError: {e}")
+            # return result
 
         if msg_parsed.node_id:
             sensor_id = generator.node_id_map[msg_parsed.node_id].xml_id
