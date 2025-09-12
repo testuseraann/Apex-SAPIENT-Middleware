@@ -190,6 +190,8 @@ class ApexServer:
                 nursery.start_soon(read_to_channel)
                 nursery.start_soon(read_from_channel)
         except* Exception as exc:
+            for e in exc.exceptions:
+                print(f"Connection {connection_id} Sub-error: {e}")
             exception_handler
         finally:
             if read_buffer:

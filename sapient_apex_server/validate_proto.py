@@ -178,6 +178,21 @@ _valid_ulid_re = re.compile("[0-7][0-9A-HJKMNP-TV-Z]{25}")
 _valid_ulid_ignorecase_re = re.compile(_valid_ulid_re.pattern, flags=re.IGNORECASE)
 _valid_uuid4_re = re.compile("[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")
 
+class UnknownFieldSet:
+    def __init__(self, message):
+        self.message = message
+        self.fields = []
+
+    def add_field(self, field_number, wire_type, data):
+        self.fields.append({
+            "field_number": field_number,
+            "wire_type": wire_type,
+            "data": data
+        })
+
+    def __iter__(self):
+        return iter(self.fields)
+
 
 class Validator:
     def __init__(self, options: ValidationOptions):
