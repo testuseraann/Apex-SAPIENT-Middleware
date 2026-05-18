@@ -530,4 +530,5 @@ def empty_sapient_message(version: SapientVersion) -> SapientMessage:
     return {
         SapientVersion.BSI_FLEX_335_V1_0: BsiFlexV1SapientMessage,
         SapientVersion.BSI_FLEX_335_V2_0: BsiFlexV2SapientMessage,
+        SapientVersion.BSI_FLEX_335_V3_0: BsiFlexV2SapientMessage,
     }[version]()

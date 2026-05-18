@@ -108,7 +108,8 @@
     "detectionMinimumGap": 0.08,
     "supportedIcdVersions": [
       "BSI Flex 335 v1.0",
-      "BSI Flex 335 v2.0"
+      "BSI Flex 335 v2.0",
+      "BSI Flex 335 v2.0 NATO STANREC 4869 v1.0"
     ]
   }
 }

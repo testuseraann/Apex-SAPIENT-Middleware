@@ -157,9 +157,11 @@ def get_schema_mutater(version: SapientVersion, is_upgrade: bool) -> Callable[[M
             SapientVersion.VERSION6: oldest_protocol,
             SapientVersion.BSI_FLEX_335_V1_0: not_implemented,
             SapientVersion.BSI_FLEX_335_V2_0: translate_v1_to_v2,
+            SapientVersion.BSI_FLEX_335_V2_0_NATO: translate_v1_to_v2,
         }
     else:
         mutaters = {
+            SapientVersion.BSI_FLEX_335_V2_0_NATO: newest_protocol,
             SapientVersion.BSI_FLEX_335_V2_0: newest_protocol,
             SapientVersion.BSI_FLEX_335_V1_0: translate_v2_to_v1,
             SapientVersion.VERSION6: not_implemented,

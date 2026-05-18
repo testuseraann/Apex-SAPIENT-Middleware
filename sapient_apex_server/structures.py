@@ -35,8 +35,9 @@ class SapientVersion(IntEnum):
     VERSION6 = auto()
     BSI_FLEX_335_V1_0 = auto()
     BSI_FLEX_335_V2_0 = auto()
+    BSI_FLEX_335_V2_0_NATO = auto()
 
-    LATEST = BSI_FLEX_335_V2_0
+    LATEST = BSI_FLEX_335_V2_0_NATO
     OLDEST = VERSION6
     LOWEST_PROTO = BSI_FLEX_335_V1_0
 
@@ -48,6 +49,8 @@ class SapientVersion(IntEnum):
             return "BSI Flex 335 v1.0"
         if self == SapientVersion.BSI_FLEX_335_V2_0:
             return "BSI Flex 335 v2.0"
+        if self == SapientVersion.BSI_FLEX_335_V2_0_NATO:
+            return "BSI Flex 335 v2.0 NATO STANREC 4869 v1.0"
         raise NotImplementedError()
 
 
