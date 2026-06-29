@@ -192,7 +192,7 @@ class ApexServer:
         except* Exception as exc:
             for e in exc.exceptions:
                 print(f"Connection {connection_id} Sub-error: {e}")
-            exception_handler
+                exception_handler(e)
         finally:
             if read_buffer:
                 if len(read_buffer) > 40:

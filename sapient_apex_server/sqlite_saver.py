@@ -4,7 +4,7 @@
 
 import logging
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import List, Optional, Sequence
 
@@ -24,7 +24,7 @@ from sapient_apex_server.structures import (
     DisconnectionRecord,
     MessageRecord,
 )
-from sapient_apex_server.time_util import datetime_to_int, datetime_to_str
+from sapient_apex_server.time_util import datetime_to_int
 
 logger = logging.getLogger("apex")
 
@@ -224,7 +224,7 @@ def rollover(
     old_saver: SqliteSaver, path: Optional[Path] = None, conversion_enabled: bool = True
 ) -> SqliteSaver:
     # Create new saver instance
-    date_str = datetime_to_str(datetime.utcnow()).replace(":", "-")
+    date_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     sqlite_rel_filename = str(path or Path(f"data/data-{date_str}.sqlite"))
     new_saver = SqliteSaver(sqlite_rel_filename, conversion_enabled)
     sqlite_abs_filename = os.path.abspath(str(sqlite_rel_filename))
