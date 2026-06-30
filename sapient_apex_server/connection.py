@@ -623,7 +623,7 @@ _CONNECTION_TYPES = {
 
 
 class ConnectionCreator:
-    def __init__(self, config: dict):
+    def __init__(self, config: dict, starting_connection_id: int = 0):
         reg_id = config.get("autoAssignSensorIDInRegistration", {}).get("startingID", 1000001)
         dmm_message_format = MessageFormat.PROTO
         parent_message_format = MessageFormat.PROTO
@@ -646,7 +646,7 @@ class ConnectionCreator:
             [],
             parent_message_format,
         )
-        self.previous_connection_id = 0
+        self.previous_connection_id = starting_connection_id
 
     def create(self, connection_config: dict, writer: WriterType):
         self.previous_connection_id += 1

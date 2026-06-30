@@ -3,7 +3,7 @@
 #
 from contextlib import asynccontextmanager
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 from importlib.metadata import metadata
 import json
 import logging
@@ -22,7 +22,6 @@ from sapient_apex_api.manager import Manager
 from sapient_apex_server.apex_server import Callbacks, ApexServer
 from sapient_apex_server.sqlite_thread import SqliteThread
 from sapient_apex_server.structures import MessageRecord
-from sapient_apex_server.time_util import datetime_to_str
 
 logger = logging.getLogger("apex")
 
@@ -77,7 +76,7 @@ class ApexMain:
 
         # Create the database (by running the database thread)
         Path("data").mkdir(exist_ok=True)
-        date_str = datetime_to_str(datetime.utcnow()).replace(":", "-")
+        date_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
         sqlite_filename = f"data/data-{date_str}.sqlite"
         self.sqlite_thread = SqliteThread(
             filename=sqlite_filename,
@@ -97,7 +96,12 @@ class ApexMain:
             self.sqlite_thread.add,
             self.startup_complete,
         )
-        self.server = ApexServer(callbacks, config)
+        self.server = ApexServer(
+            callbacks,
+            config,
+            starting_connection_id=self.sqlite_thread.max_connection_id,
+            starting_message_id=self.sqlite_thread.max_message_id,
+        )
         self.server_thread = Thread(target=self.server.run)
         self.server_thread.start()
 

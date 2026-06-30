@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import List, Optional, Sequence
 
-from sqlalchemy import create_engine, insert, select, text, update
+from sqlalchemy import create_engine, func, insert, select, text, update
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
@@ -49,6 +49,16 @@ class SqliteSaver:
                 )
             )
         logger.info("Database opened and tables created")
+
+        # If this file already has rows (e.g. it's today's file being reopened after a
+        # restart), seed counters from it so new IDs don't collide with existing ones.
+        with self.connection.begin():
+            self.max_connection_id = (
+                self.connection.execute(select(func.max(Connection.id))).scalar() or 0
+            )
+            self.max_message_id = (
+                self.connection.execute(select(func.max(Message.id))).scalar() or 0
+            )
 
     def insert_connection(self, conn: ConnectionRecord):
         """Inserts a row in Connection table when a new connection is established."""

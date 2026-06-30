@@ -212,6 +212,14 @@ Explanation of the fields:
       // Parent connection only, receive all messages, not just high-level messages
       "forwardAll": false,
 
+      // Optional. If set, the connection is disconnected when it sustains more than
+      // maxMessagesPerSecond messages/second (measured over a rolling 1-second window).
+      // Existing reconnect logic (outbound retry, or listening for a new inbound
+      // connection) then applies as normal.
+      "rateLimit": {
+        "maxMessagesPerSecond": 100
+      },
+
       // Sapient protocol used by the node. If absent,then it defaults to
       // "VERSION 6" if the encoding is XML, and to the latest standard if the
       // encoding is PROTO.

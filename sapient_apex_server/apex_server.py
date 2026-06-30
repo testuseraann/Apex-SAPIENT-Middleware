@@ -48,8 +48,6 @@ class Callbacks:
 
 logger = logging.getLogger("apex")
 
-_previous_message_id = 0
-
 
 class ApexError(RuntimeError):
     """Used to distinguish errors found by Apex (e.g. message parsing errors)."""
@@ -58,9 +56,18 @@ class ApexError(RuntimeError):
 
 
 class ApexServer:
-    def __init__(self, callbacks: Callbacks, config: dict):
+    def __init__(
+        self,
+        callbacks: Callbacks,
+        config: dict,
+        starting_connection_id: int = 0,
+        starting_message_id: int = 0,
+    ):
         self.callbacks = callbacks
-        self.connection_creator = ConnectionCreator(config)
+        self.connection_creator = ConnectionCreator(
+            config, starting_connection_id=starting_connection_id
+        )
+        self.next_message_id = starting_message_id
         self.parser_thread_token = trio.CapacityLimiter(total_tokens=1)
         self.config = config
         self.validation_config = ValidationOptions.from_config_dict(
@@ -99,11 +106,20 @@ class ApexServer:
         )
         msg_send_channel, msg_recv_channel = trio.open_memory_channel(max_buffer_size=math.inf)
 
+        # Rate limiting: if configured, disconnect a connection that sustains more than
+        # max_messages_per_second messages/second, measured over a rolling 1-second window.
+        max_messages_per_second = connection_config.get("rateLimit", {}).get(
+            "maxMessagesPerSecond"
+        )
+        rate_window_start = trio.current_time()
+        rate_window_count = 0
+
         # One of the tasks for this connection: just reads messages and puts on a memory channel.
         # This is done rather than reading as part of the main loop so that we can accurately record
         # when the message was received, even if the parsing thread has a backlog. It does ruin
         # network backpressure, but that is probably not useful for Sapient middleware anyway.
         async def read_to_channel():
+            nonlocal rate_window_start, rate_window_count
             while True:
                 receive_fn = (
                     receive_size_prefixed
@@ -117,11 +133,27 @@ class ApexServer:
                     max_size=self.config["messageMaxSizeKb"] * 1024,
                     return_delimiter=True,
                 )
-                global _previous_message_id
-                _previous_message_id += 1
+
+                if max_messages_per_second is not None:
+                    now = trio.current_time()
+                    if now - rate_window_start >= 1.0:
+                        rate_window_start = now
+                        rate_window_count = 0
+                    rate_window_count += 1
+                    if rate_window_count > max_messages_per_second:
+                        logger.warning(
+                            f"Connection {connection_id} exceeded rate limit of "
+                            f"{max_messages_per_second} messages/second; disconnecting"
+                        )
+                        raise ApexError(
+                            "Rate limit exceeded: more than "
+                            f"{max_messages_per_second} messages/second"
+                        )
+
+                self.next_message_id += 1
                 raw_message = ReceivedDataRecord(
                     connection_id=connection_id,
-                    message_id=_previous_message_id,
+                    message_id=self.next_message_id,
                     timestamp=datetime.utcnow(),
                     data_bytes=message_bytes,
                 )

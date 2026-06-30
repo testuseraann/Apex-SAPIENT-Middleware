@@ -1,0 +1,41 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Apex Server",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/sapient_apex_server/apex.py",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "justMyCode": false
+        },
+        {
+            "name": "Apex Server (custom config)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/sapient_apex_server/apex.py",
+            "args": ["${input:configFile}"],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "justMyCode": false
+        },
+        {
+            "name": "Apex Replay",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/sapient_apex_replay/replay.py",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "justMyCode": false
+        }
+    ],
+    "inputs": [
+        {
+            "id": "configFile",
+            "type": "promptString",
+            "description": "Path to apex_config.json",
+            "default": "apex_config.json"
+        }
+    ]
+}

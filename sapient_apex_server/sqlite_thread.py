@@ -30,6 +30,8 @@ class SqliteThread:
         self.filename = filename
         self.rollover_config = rollover_config
         self.conversion_enabled = conversion_enabled
+        self.max_connection_id = 0
+        self.max_message_id = 0
 
         if self.rollover_config.get("enable"):
             unit = self.rollover_config.get("unit")
@@ -73,6 +75,8 @@ class SqliteThread:
 
     def run(self):
         saver = SqliteSaver(self.filename, self.conversion_enabled)
+        self.max_connection_id = saver.max_connection_id
+        self.max_message_id = saver.max_message_id
         self.start_semaphore.release()
         next_rollover = datetime.now() + self.rollover_interval
         while True:

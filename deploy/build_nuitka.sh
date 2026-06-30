@@ -19,6 +19,7 @@ python3 -m nuitka \
   --enable-plugin=pkg-resources \
   --enable-plugin=pylint-warnings \
   --include-package=apex \
+  --include-package=google \
   --include-package=urllib3 \
   --include-package-data=urllib3 \
   --enable-plugin=pkg-resources \

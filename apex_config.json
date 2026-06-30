@@ -5,43 +5,50 @@
       "type": "Child",
       "port": 5000,
       "format": "XML",
-      "icd_version": "VERSION6"
+      "icd_version": "VERSION6",
+      "rateLimit": { "maxMessagesPerSecond": 10 }
     },
     {
       "type": "Child",
       "port": 5010,
       "format": "PROTO",
-      "icd_version": "BSI Flex 335 v1.0"
+      "icd_version": "BSI Flex 335 v1.0",
+      "rateLimit": { "maxMessagesPerSecond": 10 }
     },
     {
       "type": "Child",
       "port": 5020,
       "format": "PROTO",
-      "icd_version": "BSI Flex 335 v2.0"
+      "icd_version": "BSI Flex 335 v2.0",
+      "rateLimit": { "maxMessagesPerSecond": 10 }
     },
     {
       "type": "Peer",
       "port": 5001,
       "format": "PROTO",
-      "icd_version": "BSI Flex 335 v1.0"
+      "icd_version": "BSI Flex 335 v1.0",
+      "rateLimit": { "maxMessagesPerSecond": 10 }
     },
     {
       "type": "Parent",
       "port": 5002,
       "format": "PROTO",
-      "icd_version": "BSI Flex 335 v1.0"
+      "icd_version": "BSI Flex 335 v1.0",
+      "rateLimit": { "maxMessagesPerSecond": 10 }
     },
     {
       "type": "Recorder",
       "port": 5003,
       "format": "PROTO",
-      "icd_version": "BSI Flex 335 v1.0"
+      "icd_version": "BSI Flex 335 v1.0",
+      "rateLimit": { "maxMessagesPerSecond": 10 }
     },
     {
       "type": "Parent",
       "port": 5004,
       "forwardAll": true,
-      "format": "PROTO"
+      "format": "PROTO",
+      "rateLimit": { "maxMessagesPerSecond": 10 }
     },
     {
       "type": "Parent",
@@ -49,7 +56,8 @@
       "port": 10000,
       "outbound": true,
       "format": "PROTO",
-      "icd_version": "BSI Flex 335 v1.0"
+      "icd_version": "BSI Flex 335 v1.0",
+      "rateLimit": { "maxMessagesPerSecond": 10 }
     }
   ],
   "elasticConfig": {
