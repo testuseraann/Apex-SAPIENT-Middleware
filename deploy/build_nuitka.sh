@@ -18,15 +18,14 @@ python3 -m nuitka \
   --standalone \
   --enable-plugin=pkg-resources \
   --enable-plugin=pylint-warnings \
-  --include-package=apex \
-  --include-package=google \
-  --include-package=urllib3 \
-  --include-package-data=urllib3 \
-  --enable-plugin=pkg-resources \
+  --enable-plugin=data-files \
+  --include-package=sapient_apex_server \
+  --include-package=sapient_apex_api \
+  --include-package=sapient_msg \
+  --include-package=google.protobuf \
   --include-package=fastapi \
   --include-package=uvicorn \
   --include-package=elasticsearch \
-  --enable-plugin=data-files \
   --output-dir=deploy/build \
   --follow-imports \
   --python-flag=no_docstrings \
