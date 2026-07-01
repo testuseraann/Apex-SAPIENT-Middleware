@@ -221,8 +221,8 @@ class ApexServer:
                 nursery.start_soon(buffered_writer.perform_writes)
                 nursery.start_soon(read_to_channel)
                 nursery.start_soon(read_from_channel)
-        except* Exception as exc:
-            for e in exc.exceptions:
+        except Exception as exc:
+            for e in getattr(exc, "exceptions", [exc]):
                 print(f"Connection {connection_id} Sub-error: {e}")
                 exception_handler(e)
         finally:
@@ -269,7 +269,7 @@ class ApexServer:
                 self.callbacks.on_startup_complete.set()
 
         except Exception as e:
-            for exc in e.exceptions:
+            for exc in getattr(e, "exceptions", [e]):
                 print("Sub-exception:", exc)
             print("Other exception: ", e, f"(port {port})")
 
