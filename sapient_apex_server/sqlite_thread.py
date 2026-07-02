@@ -5,7 +5,7 @@
 import itertools
 import logging
 import sys
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from threading import Condition, Semaphore, Thread
 from typing import Optional
 
@@ -18,6 +18,15 @@ from sapient_apex_server.structures import (
 )
 
 logger = logging.getLogger("apex")
+
+# Fixed UTC reference point used to align rollover boundaries to a consistent grid
+# (e.g. midnight for a 1-day interval), regardless of when the server started.
+_ROLLOVER_EPOCH = datetime(1970, 1, 1, tzinfo=timezone.utc)
+
+
+def _next_rollover_time(now: datetime, interval: timedelta) -> datetime:
+    intervals_elapsed = (now - _ROLLOVER_EPOCH) // interval
+    return _ROLLOVER_EPOCH + interval * (intervals_elapsed + 1)
 
 
 class SqliteThread:
@@ -78,20 +87,21 @@ class SqliteThread:
         self.max_connection_id = saver.max_connection_id
         self.max_message_id = saver.max_message_id
         self.start_semaphore.release()
-        next_rollover = datetime.now() + self.rollover_interval
+        next_rollover = _next_rollover_time(datetime.now(timezone.utc), self.rollover_interval)
         while True:
             with self.condition:
                 self.condition.wait(timeout=1)
 
             # Check if database needs to rollover before writting
-            if self.rollover_config.get("enable") is True and datetime.now() >= next_rollover:
+            now = datetime.now(timezone.utc)
+            if self.rollover_config.get("enable") is True and now >= next_rollover:
                 logger.info("Database rollover starting...")
                 new_saver = self.rollover(saver)
                 if new_saver is not None:
                     saver.close()
                     saver = new_saver
                     logger.info("Database rollover complete.")
-                next_rollover = datetime.now() + self.rollover_interval
+                next_rollover = _next_rollover_time(now, self.rollover_interval)
 
             if len(self.pending) > 0:
                 last_pending = self.pending
