@@ -8,6 +8,7 @@ import os
 import struct
 import sys
 from pathlib import Path
+from threading import Lock
 
 import trio
 from google.protobuf.json_format import MessageToJson
@@ -20,6 +21,7 @@ from sapient_apex_server.translator.proto_to_proto_translator import (
     empty_sapient_message,
 )
 from sapient_apex_server.trio_util import (
+    ThreadSafeCancelScope,
     connect_tcp_repeatedly,
     receive_size_prefixed,
     receive_until,
@@ -286,6 +288,27 @@ class NetworkConnection:
             await stream.aclose()
 
 
+class SpeedController:
+    """Thread-safe holder for the replay speed multiplier.
+
+    A plain float on the config dict is enough for a one-shot CLI run, but the GUI needs to change
+    the speed multiplier from a different thread while the replay is in progress, so this wraps it
+    with a lock.
+    """
+
+    def __init__(self, speed_multiplier: float):
+        self._lock = Lock()
+        self._speed_multiplier = speed_multiplier
+
+    def get(self) -> float:
+        with self._lock:
+            return self._speed_multiplier
+
+    def set(self, speed_multiplier: float):
+        with self._lock:
+            self._speed_multiplier = speed_multiplier
+
+
 class Sleeper:
     """Sleeps a suitable amount of time until messages are ready to send.
 
@@ -297,74 +320,113 @@ class Sleeper:
 
     To fit with Trio's convention for storing times, this uses floating point seconds, rather than
     Apex's usual convention of integer microseconds.
+
+    The speed multiplier can be changed on the fly via the given SpeedController (e.g. from a GUI on
+    another thread). Rather than computing a single deadline from a fixed start time, this polls in
+    short increments and, after every message, "rebases" its reference point to the current time.
+    That way a speed change only affects messages not yet sent, and takes effect within one poll
+    interval instead of retroactively shifting deadlines computed before the change.
     """
 
-    def __init__(self, config):
-        self.db_start_time = datetime_str_to_int(config["start_time"]) / 1_000_000
-        self.real_start_time = trio.current_time()
-        self.speed_multiplier = config["speed_multiplier"]
-        self.last_lag_warn_time = self.real_start_time - 10  # Note last log time so not too chatty
-        self.last_info_time = self.real_start_time - 10  # Separate counter for info level
+    _POLL_INTERVAL = 0.2  # How often to recheck the deadline in case speed has changed
+
+    def __init__(self, config, speed_controller: SpeedController):
+        self.db_anchor_time = datetime_str_to_int(config["start_time"]) / 1_000_000
+        self.real_anchor_time = trio.current_time()
+        self.speed_controller = speed_controller
+        self.last_lag_warn_time = self.real_anchor_time - 10  # So not too chatty
+        self.last_info_time = self.real_anchor_time - 10  # Separate counter for info level
         self.message_count = 0
 
     async def sleep_until_message_time(self, db_current_time_ms: int):
-        # Compute deadline
         db_current_time = db_current_time_ms / 1_000_000
-        db_time_difference = db_current_time - self.db_start_time
-        real_time_difference = db_time_difference / self.speed_multiplier
-        deadline = self.real_start_time + real_time_difference
+        warned_already = False
+        while True:
+            # Compute deadline using the current speed multiplier, which may change between polls
+            db_time_difference = db_current_time - self.db_anchor_time
+            real_time_difference = db_time_difference / self.speed_controller.get()
+            deadline = self.real_anchor_time + real_time_difference
 
-        # Warn if high lag or about to wait a long time (due to big gap between messages)
-        current_time = trio.current_time()
-        wait_time = deadline - current_time
-        if wait_time < -1 and (current_time - self.last_lag_warn_time) >= 1:
-            logger.warning(f"Lag of {-wait_time:0.1f}s")
-            self.last_lag_warn_time = current_time
-        elif wait_time > 5:
-            logger.warning(f"Waiting for extended time: {wait_time:0.1f}s")
+            current_time = trio.current_time()
+            wait_time = deadline - current_time
+            if not warned_already:
+                # Warn if high lag or about to wait a long time (due to big gap between messages)
+                if wait_time < -1 and (current_time - self.last_lag_warn_time) >= 1:
+                    logger.warning(f"Lag of {-wait_time:0.1f}s")
+                    self.last_lag_warn_time = current_time
+                elif wait_time > 5:
+                    logger.warning(f"Waiting for extended time: {wait_time:0.1f}s")
+                warned_already = True
 
-        # Actually perform the sleep
-        await trio.sleep_until(deadline)
+            if wait_time <= 0:
+                break
+            await trio.sleep(min(wait_time, self._POLL_INTERVAL))
+
+        # Rebase reference point to now, so a later speed change only affects future messages
+        self.db_anchor_time = db_current_time
+        self.real_anchor_time = trio.current_time()
 
         # Log time and number of messages sometimes
-        if current_time - self.last_info_time > 2:
+        if self.real_anchor_time - self.last_info_time > 2:
             logger.info(
                 f"Current database time: {datetime_int_to_str(db_current_time_ms)}; "
                 + f"messages sent: {self.message_count}"
             )
-            self.last_info_time = current_time
+            self.last_info_time = self.real_anchor_time
         self.message_count += 1
 
 
-async def start_replayer(config, task_status=trio.TASK_STATUS_IGNORED):
+async def start_replayer(
+    config,
+    speed_controller: SpeedController = None,
+    cancel_scope: ThreadSafeCancelScope = None,
+    task_status=trio.TASK_STATUS_IGNORED,
+):
+    """Runs the replayer until it finishes sending all messages, or cancel_scope is cancelled.
+
+    :param speed_controller: If given, used (and may be mutated externally, e.g. from a GUI on
+        another thread) to control replay speed; otherwise one is created from config once and
+        fixed for the whole replay.
+    :param cancel_scope: If given, used to allow stopping the replay early (e.g. from a GUI on
+        another thread); see ThreadSafeCancelScope for how to do this from another thread.
+    """
     database = None
     network_connection = None
+    if speed_controller is None:
+        speed_controller = SpeedController(config["speed_multiplier"])
+    if cancel_scope is None:
+        cancel_scope = ThreadSafeCancelScope()
     try:
         logging.basicConfig(
             level=config["log_level"], format="%(asctime)s %(levelname)s: %(message)s"
         )
+        logger.setLevel(config["log_level"])
         database = Database(config)
         database.connect()
         network_connection = NetworkConnection(config)
         message_format = MessageFormat[config.get("format", "PROTO")]
-        async with trio.open_nursery() as nursery:
-            await network_connection.connect(nursery, task_status)
-            msg_count = 0
-            for msg_count, msg_data in enumerate(
-                database.get_initial_messages(message_format), start=1
-            ):
-                await network_connection.send(msg_data)
-            logger.info(f"Sent {msg_count} initial messages")
-            sleeper = Sleeper(config)  # Must be constructed after above potentially slow calls
-            msg_count = 0
-            for msg_count, (msg_time, msg_data) in enumerate(
-                database.get_messages(message_format), start=1
-            ):
-                await sleeper.sleep_until_message_time(msg_time)
-                await network_connection.send(msg_data)
-            logger.info(f"Sent all {msg_count} non-initial messages")
-            await network_connection.close()
-            network_connection = None
+        with cancel_scope:
+            async with trio.open_nursery() as nursery:
+                await network_connection.connect(nursery, task_status)
+                msg_count = 0
+                for msg_count, msg_data in enumerate(
+                    database.get_initial_messages(message_format), start=1
+                ):
+                    await network_connection.send(msg_data)
+                logger.info(f"Sent {msg_count} initial messages")
+                # Must be constructed after above potentially slow calls
+                sleeper = Sleeper(config, speed_controller)
+                msg_count = 0
+                for msg_count, (msg_time, msg_data) in enumerate(
+                    database.get_messages(message_format), start=1
+                ):
+                    await sleeper.sleep_until_message_time(msg_time)
+                    await network_connection.send(msg_data)
+                logger.info(f"Sent all {msg_count} non-initial messages")
+                await network_connection.close()
+                network_connection = None
+        if cancel_scope.scope.cancelled_caught:
+            logger.info("Replay stopped by request")
     except trio.ClosedResourceError:
         # When we close the connection after writing, we get this error from reading
         pass

@@ -9,6 +9,7 @@ packages = [
   { include = "sapient_apex_gui" },
   { include = "sapient_apex_qt_helpers" },
   { include = "sapient_apex_replay" },
+  { include = "sapient_apex_replay_gui" },
   { include = "sapient_apex_server" },
   { include = "sapient_msg" },
 ]
@@ -46,6 +47,7 @@ gui = ["pyside6"]
 apex = { reference = "sapient_apex_server:apex.serve_apex", type = "console" }
 apex_gui = { reference = "sapient_apex_gui:apex_gui.main", type = "console" }
 apex_replay = { reference = "sapient_apex_replay:replay.main", type = "console" }
+apex_replay_gui = { reference = "sapient_apex_replay_gui:replay_gui.main", type = "console" }
 
 [build-system]
 requires = ["poetry-core"]

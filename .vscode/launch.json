@@ -11,6 +11,16 @@
             "justMyCode": false
         },
         {
+            "name": "Apex Server GUI",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/sapient_apex_gui/apex_gui.py",
+            "args": ["${input:configFile}"],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "justMyCode": false
+        },
+        {
             "name": "Apex Server (custom config)",
             "type": "debugpy",
             "request": "launch",
@@ -25,6 +35,15 @@
             "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/sapient_apex_replay/replay.py",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "justMyCode": false
+        },
+        {
+            "name": "Apex Replay GUI",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/sapient_apex_replay_gui/replay_gui.py",
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
             "justMyCode": false

@@ -33,6 +33,14 @@
 				"justMyCode": true
 			},
 			{
+				"name": "Apex Replay GUI",
+				"type": "debugpy",
+				"request": "launch",
+				"program": "sapient_apex_replay_gui/replay_gui.py",
+				"console": "integratedTerminal",
+				"justMyCode": true
+			},
+			{
 				"name": "Python: Current File",
 				"type": "debugpy",
 				"request": "launch",

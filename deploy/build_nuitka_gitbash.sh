@@ -10,7 +10,17 @@ python -m nuitka --standalone --python-flag=no_docstrings \
     --plugin-enable=pyside6 --include-qt-plugins=sensible \
     --include-data-file=apex-logo.ico=apex-logo.ico \
     --include-package=sqlalchemy \
+    --include-package=google.protobuf \
     --output-dir=deploy/build sapient_apex_gui/apex_gui.py
+
+# Build apex_replay_gui
+echo "Building apex_replay_gui"
+python -m nuitka --standalone --python-flag=no_docstrings \
+    --plugin-enable=pyside6 --include-qt-plugins=sensible \
+    --include-data-file=apex-logo.ico=apex-logo.ico \
+    --include-package=sqlalchemy \
+    --include-package=google.protobuf \
+    --output-dir=deploy/build sapient_apex_replay_gui/replay_gui.py
 
 # Build apex
 echo "Building apex"
@@ -37,6 +47,7 @@ python -m nuitka \
 
 echo "Building replay"
 python -m nuitka --standalone --python-flag=no_docstrings \
+    --include-package=google.protobuf \
     --output-dir=deploy/build sapient_apex_replay/replay.py
 
 # Clean up old 'bin' directory if it exists
@@ -47,6 +58,7 @@ mkdir -p deploy/bin
 
 # Copy build outputs to 'deploy/bin'
 cp -r deploy/build/apex_gui.dist/* deploy/bin
+cp -r deploy/build/replay_gui.dist/* deploy/bin
 cp -r deploy/build/apex.dist/* deploy/bin
 cp -r deploy/build/replay.dist/* deploy/bin
 

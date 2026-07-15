@@ -1,0 +1,26 @@
+[Unit]
+Description=Apex SAPIENT Middleware
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=apex
+Group=apex
+WorkingDirectory=/opt/apex
+ExecStart=/opt/apex/venv/bin/python -m sapient_apex_server.apex /opt/apex/apex_config.json
+Restart=on-failure
+RestartSec=5
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+# Logging — journal captures stdout/stderr automatically
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=apex
+
+# Resource limits
+TimeoutStopSec=10
+
+[Install]
+WantedBy=multi-user.target

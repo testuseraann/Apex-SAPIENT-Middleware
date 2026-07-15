@@ -1,25 +1,30 @@
 <?xml version='1.0' encoding='utf8'?>
-<nuitka-compilation-report nuitka_version="2.7.12" nuitka_commercial_version="not installed" mode="standalone" completion="error exit message (1)" exit_message="pyside6: Error, failed to locate the 'PySide6' installation.">
+<nuitka-compilation-report nuitka_version="4.1.3" nuitka_commercial_version="not installed" mode="standalone" completion="error exit message (1)" exit_message="pyside6: Error, failed to locate the 'PySide6' installation.">
   <performance>
-    <memory_usage name="after_launch" value="48963584" />
+    <memory_usage name="after_launch" value="37724160" />
   </performance>
   <data_composer blob_size="None" />
+  <performance-totals>
+    <optimization-time pass="all" time="0.0000" module_count="0" />
+    <code-generation-time time="0.0000" module_count="0" />
+  </performance-totals>
   <command_line>
+    <option value="--mingw64" />
     <option value="--standalone" />
     <option value="--python-flag=no_docstrings" />
     <option value="--plugin-enable=pyside6" />
-    <option value="--include-qt-plugins=sensible" />
+    <option value="--include-qt-plugins=sensible,styles" />
+    <option value="--windows-disable-console" />
+    <option value="--windows-icon-from-ico=apex-logo.ico" />
     <option value="--include-data-file=apex-logo.ico=apex-logo.ico" />
-    <option value="--include-package=sqlalchemy" />
-    <option value="--output-dir=deploy/build" />
-    <option value="sapient_apex_gui/apex_gui.py" />
+    <option value="--output-dir=deploy\build" />
+    <option value="sapient_apex_replay_gui\replay_gui.py" />
   </command_line>
   <plugins>
     <plugin name="anti-bloat" user_enabled="no" />
     <plugin name="data-files" user_enabled="no" />
     <plugin name="delvewheel" user_enabled="no" />
     <plugin name="dll-files" user_enabled="no" />
-    <plugin name="eventlet" user_enabled="no" />
     <plugin name="gevent" user_enabled="no" />
     <plugin name="gi" user_enabled="no" />
     <plugin name="glfw" user_enabled="no" />
@@ -34,17 +39,20 @@
     <plugin name="pyside6" user_enabled="yes" />
     <plugin name="pywebview" user_enabled="no" />
     <plugin name="spacy" user_enabled="no" />
+    <plugin name="torch-jit" user_enabled="no" />
     <plugin name="transformers" user_enabled="no" />
   </plugins>
   <distributions />
-  <python python_exe="${sys.prefix}/bin/python3" python_flavor="Debian Python" python_version="3.10.12" os_name="Linux" os_release="Ubuntu-Debian-22.04.5" arch_name="x86_64" filesystem_encoding="utf-8">
+  <python python_exe="~\AppData\Local\Microsoft\WindowsApps\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\python.exe" python_flavor="Windows Store Python" python_version="3.12.10" os_name="Windows" os_release="11" arch_name="x86_64" filesystem_encoding="utf-8">
     <search_path>
       <path value="${cwd}" />
-      <path value="${cwd}/sapient_apex_gui" />
-      <path value="${sys.real_prefix}/lib/python3.10" />
-      <path value="${sys.real_prefix}/lib/python3.10/lib-dynload" />
-      <path value="${sys.prefix}/lib/python3.10/site-packages" />
+      <path value="${cwd}\sapient_apex_replay_gui" />
+      <path value="${sys.prefix}\DLLs" />
+      <path value="${sys.prefix}\Lib" />
+      <path value="${sys.prefix}" />
+      <path value="~\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages" />
+      <path value="${sys.prefix}\Lib\site-packages" />
     </search_path>
   </python>
-  <output run_filename="failed too early" />
+  <output />
 </nuitka-compilation-report>
