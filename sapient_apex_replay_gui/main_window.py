@@ -13,7 +13,6 @@ from pathlib import Path
 
 from PySide6.QtCore import QMargins, QSize, Qt
 from PySide6.QtWidgets import (
-    QCheckBox,
     QComboBox,
     QDoubleSpinBox,
     QFileDialog,
@@ -35,6 +34,7 @@ from sapient_apex_server.structures import SapientVersion
 from sapient_apex_server.time_util import str_to_datetime
 
 from sapient_apex_replay_gui.core.db_time_range import query_time_range
+from sapient_apex_replay_gui.core.replay_config import load_replay_config
 from sapient_apex_replay_gui.core.replay_thread import ReplayFinished, ReplayThread
 
 # How much to multiply/divide the speed by for the Faster/Slower buttons
@@ -55,7 +55,6 @@ class MainWindow(QMainWindow):
 
         self.host_edit = QLineEdit("127.0.0.1")
         self.port_spin = QSpinBox()
-        self.outbound_check = QCheckBox("Outbound (connect out, instead of listening)")
         self.format_combo = QComboBox()
         self.icd_combo = QComboBox()
 
@@ -99,7 +98,6 @@ class MainWindow(QMainWindow):
                     QFormLayout(): {
                         ("Host:", self.host_edit): {},
                         ("Port:", self.port_spin): {},
-                        ("", self.outbound_check): {},
                         ("Format:", self.format_combo): {},
                         ("ICD version:", self.icd_combo): {},
                     },
@@ -148,6 +146,24 @@ class MainWindow(QMainWindow):
         for version in SapientVersion:
             self.icd_combo.addItem(version.protocol_name, version.name)
         self.icd_combo.setCurrentIndex(self.icd_combo.count() - 1)  # Default to latest
+        self._load_connection_defaults()
+
+    def _load_connection_defaults(self):
+        """Prefills the connection fields from replay_config.json, if found, instead of leaving
+        the hardcoded defaults above. The fields stay editable afterwards either way."""
+        config = load_replay_config()
+        if "host" in config:
+            self.host_edit.setText(config["host"])
+        if "port" in config:
+            self.port_spin.setValue(config["port"])
+        if "format" in config:
+            format_index = self.format_combo.findText(config["format"])
+            if format_index >= 0:
+                self.format_combo.setCurrentIndex(format_index)
+        if "icd_version" in config:
+            icd_index = self.icd_combo.findText(config["icd_version"])
+            if icd_index >= 0:
+                self.icd_combo.setCurrentIndex(icd_index)
 
     def startup_open_file(self):
         if len(sys.argv) > 1:
@@ -223,7 +239,7 @@ class MainWindow(QMainWindow):
         config = {
             "log_level": "INFO",
             "filename": filename,
-            "is_outbound": self.outbound_check.isChecked(),
+            "is_outbound": True,
             "host": self.host_edit.text(),
             "port": self.port_spin.value(),
             "start_time": self.start_time_edit.text(),
@@ -253,7 +269,6 @@ class MainWindow(QMainWindow):
             self.open_button,
             self.host_edit,
             self.port_spin,
-            self.outbound_check,
             self.format_combo,
             self.icd_combo,
             self.start_time_edit,
