@@ -66,7 +66,7 @@ class Database:
         ) = connection_info
         result = f"{connection_id} ({peer}) {client_type}"
         if node_id is not None:
-            result += f" {node_id:.6} ({node_type})"
+            result += f" {node_id!s:.6} ({node_type})"
         width = 60
         result = (result[: width - 3] + "...") if len(result) > width else result.ljust(width)
         result += ": " + datetime_int_to_str(connect_time)
@@ -260,17 +260,22 @@ class NetworkConnection:
         self.connection_establish_signal.unpark()
 
         read_buffer = bytearray()
-        while True:
-            if self.message_format == MessageFormat.PROTO:
-                message_bytes = await read_proto_message(stream, read_buffer)
-                message_proto = SapientMessage()
-                message_proto.ParseFromString(message_bytes)
-                message_json = MessageToJson(message_proto, preserving_proto_field_name=True)
-                logger.debug("Received proto message from connection:\n" + message_json)
-            elif self.message_format == MessageFormat.XML:
-                message_bytes = await read_xml_message(stream, read_buffer)
-                message_xml = message_bytes.decode("utf8")
-                logger.debug("Received xml message from connection:\n" + message_xml)
+        try:
+            while True:
+                if self.message_format == MessageFormat.PROTO:
+                    message_bytes = await read_proto_message(stream, read_buffer)
+                    message_proto = SapientMessage()
+                    message_proto.ParseFromString(message_bytes)
+                    message_json = MessageToJson(message_proto, preserving_proto_field_name=True)
+                    logger.debug("Received proto message from connection:\n" + message_json)
+                elif self.message_format == MessageFormat.XML:
+                    message_bytes = await read_xml_message(stream, read_buffer)
+                    message_xml = message_bytes.decode("utf8")
+                    logger.debug("Received xml message from connection:\n" + message_xml)
+        except (EOFError, trio.ClosedResourceError, trio.BrokenResourceError):
+            # Expected when the peer disconnects, or when close() closes this same stream from
+            # another task (e.g. after all messages have been sent) - not a real error.
+            logger.info("Connection closed")
 
     async def send(self, msg_data):
         """Sends the given data to the connection."""
@@ -330,10 +335,11 @@ class Sleeper:
 
     _POLL_INTERVAL = 0.2  # How often to recheck the deadline in case speed has changed
 
-    def __init__(self, config, speed_controller: SpeedController):
+    def __init__(self, config, speed_controller: SpeedController, on_progress=None):
         self.db_anchor_time = datetime_str_to_int(config["start_time"]) / 1_000_000
         self.real_anchor_time = trio.current_time()
         self.speed_controller = speed_controller
+        self.on_progress = on_progress
         self.last_lag_warn_time = self.real_anchor_time - 10  # So not too chatty
         self.last_info_time = self.real_anchor_time - 10  # Separate counter for info level
         self.message_count = 0
@@ -366,12 +372,14 @@ class Sleeper:
         self.db_anchor_time = db_current_time
         self.real_anchor_time = trio.current_time()
 
-        # Log time and number of messages sometimes
+        # Log time and number of messages sometimes, and similarly report progress (e.g. to a GUI)
         if self.real_anchor_time - self.last_info_time > 2:
             logger.info(
                 f"Current database time: {datetime_int_to_str(db_current_time_ms)}; "
                 + f"messages sent: {self.message_count}"
             )
+            if self.on_progress is not None:
+                self.on_progress(db_current_time_ms)
             self.last_info_time = self.real_anchor_time
         self.message_count += 1
 
@@ -381,6 +389,7 @@ async def start_replayer(
     speed_controller: SpeedController = None,
     cancel_scope: ThreadSafeCancelScope = None,
     task_status=trio.TASK_STATUS_IGNORED,
+    on_progress=None,
 ):
     """Runs the replayer until it finishes sending all messages, or cancel_scope is cancelled.
 
@@ -389,6 +398,8 @@ async def start_replayer(
         fixed for the whole replay.
     :param cancel_scope: If given, used to allow stopping the replay early (e.g. from a GUI on
         another thread); see ThreadSafeCancelScope for how to do this from another thread.
+    :param on_progress: If given, called every couple of seconds with the current database time
+        (as microseconds since the epoch), e.g. so a GUI can display replay progress.
     """
     database = None
     network_connection = None
@@ -415,7 +426,7 @@ async def start_replayer(
                     await network_connection.send(msg_data)
                 logger.info(f"Sent {msg_count} initial messages")
                 # Must be constructed after above potentially slow calls
-                sleeper = Sleeper(config, speed_controller)
+                sleeper = Sleeper(config, speed_controller, on_progress)
                 msg_count = 0
                 for msg_count, (msg_time, msg_data) in enumerate(
                     database.get_messages(message_format), start=1
@@ -425,11 +436,12 @@ async def start_replayer(
                 logger.info(f"Sent all {msg_count} non-initial messages")
                 await network_connection.close()
                 network_connection = None
+                # network_connection.connect() started a background task that listens for (or
+                # keeps reconnecting to find) further connections indefinitely; now that we're
+                # done sending, stop it so the nursery can actually exit.
+                nursery.cancel_scope.cancel()
         if cancel_scope.scope.cancelled_caught:
             logger.info("Replay stopped by request")
-    except trio.ClosedResourceError:
-        # When we close the connection after writing, we get this error from reading
-        pass
     except Exception as e:
         logger.critical(f"Caught exception {type(e).__name__}: {e}")
     except KeyboardInterrupt:

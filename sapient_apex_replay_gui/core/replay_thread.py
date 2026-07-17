@@ -16,6 +16,7 @@ GUI thread as well, so the GUI can show a live log without the replay script nee
 anything about Qt.
 """
 
+import functools
 import logging
 from dataclasses import dataclass
 from threading import Thread
@@ -25,6 +26,7 @@ import trio
 from PySide6 import QtCore
 
 from sapient_apex_replay.replay import SpeedController, start_replayer
+from sapient_apex_server.time_util import datetime_int_to_str
 from sapient_apex_server.trio_util import ThreadSafeCancelScope
 
 logger = logging.getLogger("apex_replay")
@@ -53,6 +55,7 @@ class ReplayThread(QtCore.QObject):
 
     log_signal = QtCore.Signal(str)
     state_signal = QtCore.Signal(object)  # Actually ReplayFinished
+    progress_signal = QtCore.Signal(str)  # Current database time being replayed, as ISO string
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -88,8 +91,20 @@ class ReplayThread(QtCore.QObject):
 
     def _run(self, config: dict):
         error_str = None
+
+        def on_progress(db_time_ms):
+            self.progress_signal.emit(datetime_int_to_str(db_time_ms))
+
         try:
-            trio.run(start_replayer, config, self._speed_controller, self._cancel_scope)
+            trio.run(
+                functools.partial(
+                    start_replayer,
+                    config,
+                    self._speed_controller,
+                    self._cancel_scope,
+                    on_progress=on_progress,
+                )
+            )
         except Exception as e:
             error_str = f"{type(e).__name__}: {e}"
             logger.error(f"Replay thread stopped unexpectedly: {error_str}")

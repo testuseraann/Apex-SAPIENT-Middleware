@@ -49,6 +49,7 @@ class MainWindow(QMainWindow):
         self.replay_thread = ReplayThread()
         self.replay_thread.log_signal.connect(self.on_log)
         self.replay_thread.state_signal.connect(self.on_replay_finished)
+        self.replay_thread.progress_signal.connect(self.on_progress)
 
         self.filename_edit = QLineEdit()
         self.open_button = QPushButton("Select File...")
@@ -61,6 +62,7 @@ class MainWindow(QMainWindow):
         self.start_time_edit = QLineEdit()
         self.end_time_edit = QLineEdit()
         self.use_full_range_button = QPushButton("Use Full File Range")
+        self.current_time_label = QLabel("-")
 
         self.speed_spin = QDoubleSpinBox()
         self.slower_button = QPushButton("« Slower")
@@ -109,6 +111,7 @@ class MainWindow(QMainWindow):
                         ("", self.use_full_range_button): {
                             "clicked": self.on_use_full_range_clicked,
                         },
+                        ("Current time:", self.current_time_label): {},
                     },
                 },
                 QGroupBox("Speed"): {
@@ -249,6 +252,7 @@ class MainWindow(QMainWindow):
             "icd_version": self.icd_combo.currentData(),
         }
         self.log_view.clear()
+        self.current_time_label.setText(self.start_time_edit.text())
         self._set_running(True)
         self.status_label.setText("Running")
         self.replay_thread.start(config)
@@ -261,6 +265,9 @@ class MainWindow(QMainWindow):
     def on_replay_finished(self, finished: ReplayFinished):
         self._set_running(False)
         self.status_label.setText(f"Error: {finished.error_str}" if finished.error_str else "Idle")
+
+    def on_progress(self, time_str: str):
+        self.current_time_label.setText(time_str)
 
     def _set_running(self, running: bool):
         self.start_button.setEnabled(not running)

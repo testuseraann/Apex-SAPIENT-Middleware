@@ -6,7 +6,7 @@ cd "$SCRIPT_DIR/.."
 
 # Build apex_gui
 echo "Building apex_gui"
-python -m nuitka --standalone --python-flag=no_docstrings \
+python -m nuitka --standalone \
     --plugin-enable=pyside6 --include-qt-plugins=sensible \
     --include-data-file=apex-logo.ico=apex-logo.ico \
     --include-package=sqlalchemy \
@@ -15,7 +15,7 @@ python -m nuitka --standalone --python-flag=no_docstrings \
 
 # Build apex_replay_gui
 echo "Building apex_replay_gui"
-python -m nuitka --standalone --python-flag=no_docstrings \
+python -m nuitka --standalone \
     --plugin-enable=pyside6 --include-qt-plugins=sensible \
     --include-data-file=apex-logo.ico=apex-logo.ico \
     --include-package=sqlalchemy \
@@ -39,14 +39,13 @@ python -m nuitka \
   --enable-plugin=data-files \
   --output-dir=deploy/build \
   --follow-imports \
-  --python-flag=no_docstrings \
   sapient_apex_server/apex.py
 
 
 # Build replay
 
 echo "Building replay"
-python -m nuitka --standalone --python-flag=no_docstrings \
+python -m nuitka --standalone \
     --include-package=google.protobuf \
     --output-dir=deploy/build sapient_apex_replay/replay.py
 
