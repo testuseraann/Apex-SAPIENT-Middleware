@@ -2,7 +2,6 @@
 /deploy/build
 /data
 /deploy/data
-/venv
 deploy/apex.zip
 apex.zip
 *.pyc

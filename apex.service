@@ -1,0 +1,17 @@
+[Unit]
+Description=Apex SAPIENT Middleware
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/App/apex
+Environment=PYDANTIC_DISABLE_PLUGINS=1
+ExecStart=/App/apex/apex.bin
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
