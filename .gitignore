@@ -5,3 +5,5 @@
 deploy/apex.zip
 apex.zip
 *.pyc
+/venv
+/deploy/venv
