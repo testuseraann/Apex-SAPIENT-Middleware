@@ -39,7 +39,6 @@ python3 -m nuitka \
   --include-package=urllib3 \
   --include-package-data=urllib3 \
   --include-distribution-metadata=urllib3 \
-  --include-package=importlib_metadata \
   --output-dir=deploy/build \
   --follow-imports \
   sapient_apex_server/apex.py
