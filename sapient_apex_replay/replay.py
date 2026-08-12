@@ -286,7 +286,12 @@ class NetworkConnection:
                 msg_bytes = packed_len + msg_data
             elif self.message_format == MessageFormat.XML:
                 msg_bytes = msg_data + b"\0"
-            await stream.send_all(msg_bytes)
+            # send_all() is not cancellation-safe: a Cancelled raised mid-call (e.g. from the GUI's
+            # Stop button) can leave a partial frame on the wire, permanently desyncing the
+            # receiver's length-prefixed parser. Shield so a stop request only takes effect between
+            # messages, never in the middle of one.
+            with trio.CancelScope(shield=True):
+                await stream.send_all(msg_bytes)
 
     async def close(self):
         for stream in self.streams:
