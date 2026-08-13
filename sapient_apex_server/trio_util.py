@@ -43,7 +43,14 @@ class BufferedWriter:
                 raise self.exception
             message_data = self.buffered_bytes
             self.buffered_bytes = bytearray()
-            await self.send_stream.send_all(message_data)
+            # send_all() is not cancellation-safe: a Cancelled raised mid-call (e.g. because a
+            # sibling task in the same nursery, such as read_to_channel or read_from_channel, hit
+            # an error and cancelled the whole nursery) can leave a partial frame on the wire,
+            # permanently desyncing the receiver's length-prefixed parser. Shield so a message,
+            # once started, always finishes; the next parking_lot.park() is still a normal
+            # checkpoint where cancellation takes effect.
+            with trio.CancelScope(shield=True):
+                await self.send_stream.send_all(message_data)
 
     def write_nowait(self, message):
         """Adds message data to the queue to write soon."""

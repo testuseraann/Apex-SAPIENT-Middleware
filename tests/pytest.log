@@ -1,0 +1,910 @@
+2026-08-13 05:51:08 [INFO] apex_route_test: Using config file: D:\CodeGitHub\Apex-SAPIENT-Middleware\tests/resources/config_files/apex_config_routing.json
+2026-08-13 05:51:08 [INFO] apex_route_test: Using config: 
+{
+  "logLevel": "INFO",
+  "connections": [
+    {
+      "type": "Child",
+      "port": 5000
+    },
+    {
+      "type": "Child",
+      "port": 5010
+    },
+    {
+      "type": "Peer",
+      "port": 5001
+    },
+    {
+      "type": "Parent",
+      "port": 5002
+    },
+    {
+      "type": "Parent",
+      "port": 5004,
+      "forwardAll": true
+    },
+    {
+      "type": "Recorder",
+      "port": 5003
+    },
+    {
+      "type": "Parent",
+      "host": "127.0.0.1",
+      "port": 10000,
+      "outbound": true
+    }
+  ],
+  "elasticConfig": {
+    "enabled": false
+  },
+  "enableMessageConversion": false,
+  "enableTimeSyncAdjustment": false,
+  "messageMaxSizeKb": 1024,
+  "detectionConfidenceFiltering": {
+    "enable": false,
+    "threshold": 0.5,
+    "storeInDatabase": true
+  },
+  "middlewareId": "5913c0f4-9f89-4c01-ab90-939099797c4f",
+  "autoAssignSensorIDInRegistration": {
+    "enable": true,
+    "startingID": 1000001,
+    "staticNodeIds": {
+      "3d1ffd1b-cc01-4c26-a7e8-bf4da3d393b8": 0
+    }
+  },
+  "allowPeerRegistration": true,
+  "sendRegistrationAck": true,
+  "rollover": {
+    "enable": true,
+    "unit": "days",
+    "value": 1
+  },
+  "validationOptions": {
+    "validationTypes": [],
+    "strictIdFormat": true,
+    "messageTimestampRange": [
+      -0.9,
+      0.1
+    ],
+    "detectionMinimumGap": 0.08
+  }
+}
+2026-08-13 05:51:08 [INFO] apex: Opening SQLite database with url: sqlite:///data/data-2026-08-13.sqlite
+2026-08-13 05:51:08 [INFO] apex: Database opened and tables created
+2026-08-13 05:51:08 [INFO] apex: Start listening to port 5000
+2026-08-13 05:51:18 [DEBUG] sapient_apex_server.translator.xml_to_bsi_flex_v1: Converting message [b'<SensorRegistration>\n    <timestamp>2024-02-09T16:17:27.521839Z</timestamp>\n    <sensorID>1</sensorID>\n    <sensorType>Silverfish : UGV</sensorType>\n    <name>DUMMY_ASM</name>\n    <capabilities Category="Wifi_interface" Type="NODE_TYPE_CYBER" Value="20" Units="dBm" />\n    <heartbeatDefinition>\n        <heartbeatInterval units="seconds" value="5" />\n        <sensorLocationDefinition>\n            <locationType units="decimal degrees-metres" datum="WGS84" zone="30n" north="True">GPS</locationType>\n        </sensorLocationDefinition>\n    </heartbeatDefinition>\n    <modeDefinition type="Permanent">\n        <modeName>Default</modeName>\n        <settleTime units="seconds" value="1" />\n        <scanType>Steerable</scanType>\n        <detectionDefinition>\n            <locationType units="decimal degrees-metres" datum="WGS84" zone="30n" north="True">GPS</locationType>\n            <geometricError type="Standard Deviation" units="meters" variationType="Linear with Range">\n                <performanceValue type="eRmin" value="0.1" />\n                <performanceValue type="eRmax" value="0.5" />\n            </geometricError>\n            <detectionReport category="detection" type="confidence" units="probability" onChange="0" />\n            <detectionClassDefinition>\n                <confidenceDefinition>Multiple Class</confidenceDefinition>\n                <classPerformance type="FAR" units="Per Period" unitValue="1" variationType="Linear with Range">\n                    <performanceValue type="eRmin" value="0.1" />\n                    <performanceValue type="eRmax" value="0.5" />\n                </classPerformance>\n                <classDefinition type="Human">\n                    <confidence units="probability" />\n                </classDefinition>\n                <classDefinition type="Vehicle">\n                    <confidence units="probability" />\n                </classDefinition>\n            </detectionClassDefinition>\n            <behaviourDefinition type="Walking">\n                <confidence units="probability" />\n            </behaviourDefinition>\n        </detectionDefinition>\n        <taskDefinition>\n            <regionDefinition>\n                <regionType>Area of Interest</regionType>\n                <locationType units="decimal degrees-metres" datum="WGS84" zone="30n" north="True">GPS</locationType>\n            </regionDefinition>\n            <command name="Request" units="Registration, Reset, Heartbeat, Stop, Start" completionTime="10" completionTimeUnits="seconds" />\n            <command name="LookAt" units="RangeBearing" completionTime="10" completionTimeUnits="seconds" />\n            <command name="GoTo" units="Location" completionTime="0" completionTimeUnits="seconds" />\n            <command name="NetSurv" units="surveyTask" completionTime="30" completionTimeUnits="seconds" />\n        </taskDefinition>\n    </modeDefinition>\n</SensorRegistration>' to protobuf
+2026-08-13 05:51:18 [DEBUG] sapient_apex_server.translator.xml_to_bsi_flex_v1: Converted message [b'<SensorRegistration>\n    <timestamp>2024-02-09T16:17:27.521839Z</timestamp>\n    <sensorID>1</sensorID>\n    <sensorType>Silverfish : UGV</sensorType>\n    <name>DUMMY_ASM</name>\n    <capabilities Category="Wifi_interface" Type="NODE_TYPE_CYBER" Value="20" Units="dBm" />\n    <heartbeatDefinition>\n        <heartbeatInterval units="seconds" value="5" />\n        <sensorLocationDefinition>\n            <locationType units="decimal degrees-metres" datum="WGS84" zone="30n" north="True">GPS</locationType>\n        </sensorLocationDefinition>\n    </heartbeatDefinition>\n    <modeDefinition type="Permanent">\n        <modeName>Default</modeName>\n        <settleTime units="seconds" value="1" />\n        <scanType>Steerable</scanType>\n        <detectionDefinition>\n            <locationType units="decimal degrees-metres" datum="WGS84" zone="30n" north="True">GPS</locationType>\n            <geometricError type="Standard Deviation" units="meters" variationType="Linear with Range">\n                <performanceValue type="eRmin" value="0.1" />\n                <performanceValue type="eRmax" value="0.5" />\n            </geometricError>\n            <detectionReport category="detection" type="confidence" units="probability" onChange="0" />\n            <detectionClassDefinition>\n                <confidenceDefinition>Multiple Class</confidenceDefinition>\n                <classPerformance type="FAR" units="Per Period" unitValue="1" variationType="Linear with Range">\n                    <performanceValue type="eRmin" value="0.1" />\n                    <performanceValue type="eRmax" value="0.5" />\n                </classPerformance>\n                <classDefinition type="Human">\n                    <confidence units="probability" />\n                </classDefinition>\n                <classDefinition type="Vehicle">\n                    <confidence units="probability" />\n                </classDefinition>\n            </detectionClassDefinition>\n            <behaviourDefinition type="Walking">\n                <confidence units="probability" />\n            </behaviourDefinition>\n        </detectionDefinition>\n        <taskDefinition>\n            <regionDefinition>\n                <regionType>Area of Interest</regionType>\n                <locationType units="decimal degrees-metres" datum="WGS84" zone="30n" north="True">GPS</locationType>\n            </regionDefinition>\n            <command name="Request" units="Registration, Reset, Heartbeat, Stop, Start" completionTime="10" completionTimeUnits="seconds" />\n            <command name="LookAt" units="RangeBearing" completionTime="10" completionTimeUnits="seconds" />\n            <command name="GoTo" units="Location" completionTime="0" completionTimeUnits="seconds" />\n            <command name="NetSurv" units="surveyTask" completionTime="30" completionTimeUnits="seconds" />\n        </taskDefinition>\n    </modeDefinition>\n</SensorRegistration>'] to protobuf message [{
+  "nodeId": "34e6ef3c-29e6-40b4-8a5f-50c9baeb0575"
+}] with errors [['In message Timestamp, unexpected text in element', 'In message SapientMessage, unknown element SensorRegistration']]
+2026-08-13 05:51:18 [DEBUG] sapient_apex_server.translator.xml_to_bsi_flex_v1: Finished converting message [b'<SensorRegistration>\n    <timestamp>2024-02-09T16:17:27.521839Z</timestamp>\n    <sensorID>1</sensorID>\n    <sensorType>Silverfish : UGV</sensorType>\n    <name>DUMMY_ASM</name>\n    <capabilities Category="Wifi_interface" Type="NODE_TYPE_CYBER" Value="20" Units="dBm" />\n    <heartbeatDefinition>\n        <heartbeatInterval units="seconds" value="5" />\n        <sensorLocationDefinition>\n            <locationType units="decimal degrees-metres" datum="WGS84" zone="30n" north="True">GPS</locationType>\n        </sensorLocationDefinition>\n    </heartbeatDefinition>\n    <modeDefinition type="Permanent">\n        <modeName>Default</modeName>\n        <settleTime units="seconds" value="1" />\n        <scanType>Steerable</scanType>\n        <detectionDefinition>\n            <locationType units="decimal degrees-metres" datum="WGS84" zone="30n" north="True">GPS</locationType>\n            <geometricError type="Standard Deviation" units="meters" variationType="Linear with Range">\n                <performanceValue type="eRmin" value="0.1" />\n                <performanceValue type="eRmax" value="0.5" />\n            </geometricError>\n            <detectionReport category="detection" type="confidence" units="probability" onChange="0" />\n            <detectionClassDefinition>\n                <confidenceDefinition>Multiple Class</confidenceDefinition>\n                <classPerformance type="FAR" units="Per Period" unitValue="1" variationType="Linear with Range">\n                    <performanceValue type="eRmin" value="0.1" />\n                    <performanceValue type="eRmax" value="0.5" />\n                </classPerformance>\n                <classDefinition type="Human">\n                    <confidence units="probability" />\n                </classDefinition>\n                <classDefinition type="Vehicle">\n                    <confidence units="probability" />\n                </classDefinition>\n            </detectionClassDefinition>\n            <behaviourDefinition type="Walking">\n                <confidence units="probability" />\n            </behaviourDefinition>\n        </detectionDefinition>\n        <taskDefinition>\n            <regionDefinition>\n                <regionType>Area of Interest</regionType>\n                <locationType units="decimal degrees-metres" datum="WGS84" zone="30n" north="True">GPS</locationType>\n            </regionDefinition>\n            <command name="Request" units="Registration, Reset, Heartbeat, Stop, Start" completionTime="10" completionTimeUnits="seconds" />\n            <command name="LookAt" units="RangeBearing" completionTime="10" completionTimeUnits="seconds" />\n            <command name="GoTo" units="Location" completionTime="0" completionTimeUnits="seconds" />\n            <command name="NetSurv" units="surveyTask" completionTime="30" completionTimeUnits="seconds" />\n        </taskDefinition>\n    </modeDefinition>\n</SensorRegistration>'] to protobuf message [{
+  "nodeId": "34e6ef3c-29e6-40b4-8a5f-50c9baeb0575"
+}]
+2026-08-13 05:51:18 [ERROR] sapient_apex_server.parse_xml: Errors encountered while parsing XML to proto: [In message Timestamp, unexpected text in element
+In message SapientMessage, unknown element SensorRegistration]
+2026-08-13 05:51:18 [DEBUG] sapient_apex_server.translator.xml_to_bsi_flex_v1: Converting message [b'<DetectionReport>\n    <timestamp>2024-02-09T16:17:41.577384Z</timestamp>\n    <sourceID>1</sourceID>\n    <reportID>4</reportID>\n    <objectID>1</objectID>\n    <taskID>0</taskID>\n    <location>\n        <X>50.78942393071742</X>\n        <Y>-1.11786027775316</Y>\n        <Z>0.0</Z>\n    </location>\n</DetectionReport>' to protobuf
+2026-08-13 05:51:18 [DEBUG] sapient_apex_server.translator.xml_to_bsi_flex_v1: Converted message [b'<DetectionReport>\n    <timestamp>2024-02-09T16:17:41.577384Z</timestamp>\n    <sourceID>1</sourceID>\n    <reportID>4</reportID>\n    <objectID>1</objectID>\n    <taskID>0</taskID>\n    <location>\n        <X>50.78942393071742</X>\n        <Y>-1.11786027775316</Y>\n        <Z>0.0</Z>\n    </location>\n</DetectionReport>'] to protobuf message [{
+  "nodeId": "34e6ef3c-29e6-40b4-8a5f-50c9baeb0575"
+}] with errors [['In message Timestamp, unexpected text in element', 'In message SapientMessage, unknown element DetectionReport']]
+2026-08-13 05:51:18 [DEBUG] sapient_apex_server.translator.xml_to_bsi_flex_v1: Finished converting message [b'<DetectionReport>\n    <timestamp>2024-02-09T16:17:41.577384Z</timestamp>\n    <sourceID>1</sourceID>\n    <reportID>4</reportID>\n    <objectID>1</objectID>\n    <taskID>0</taskID>\n    <location>\n        <X>50.78942393071742</X>\n        <Y>-1.11786027775316</Y>\n        <Z>0.0</Z>\n    </location>\n</DetectionReport>'] to protobuf message [{
+  "nodeId": "34e6ef3c-29e6-40b4-8a5f-50c9baeb0575"
+}]
+2026-08-13 05:51:18 [ERROR] sapient_apex_server.parse_xml: Errors encountered while parsing XML to proto: [In message Timestamp, unexpected text in element
+In message SapientMessage, unknown element DetectionReport]
+2026-08-13 05:51:18 [DEBUG] apex: Writing None to 1 DMMs
+2026-08-13 05:51:18 [DEBUG] sapient_apex_server.translator.xml_to_bsi_flex_v1: Converting message [b'<StatusReport>\n    <timestamp>2024-02-09T16:17:27.538443Z</timestamp>\n    <sourceID>1</sourceID>\n    <reportID>1</reportID>\n    <system>OK</system>\n    <info>New</info>\n    <sensorLocation>\n        <location>\n            <X>50.78942393071742</X>\n            <Y>-1.11786027775316</Y>\n            <Z>0.0</Z>\n            <eX>0.0</eX>\n            <eY>0.0</eY>\n            <eZ>0.0</eZ>\n        </location>\n    </sensorLocation>\n</StatusReport>' to protobuf
+2026-08-13 05:51:18 [DEBUG] sapient_apex_server.translator.xml_to_bsi_flex_v1: Converted message [b'<StatusReport>\n    <timestamp>2024-02-09T16:17:27.538443Z</timestamp>\n    <sourceID>1</sourceID>\n    <reportID>1</reportID>\n    <system>OK</system>\n    <info>New</info>\n    <sensorLocation>\n        <location>\n            <X>50.78942393071742</X>\n            <Y>-1.11786027775316</Y>\n            <Z>0.0</Z>\n            <eX>0.0</eX>\n            <eY>0.0</eY>\n            <eZ>0.0</eZ>\n        </location>\n    </sensorLocation>\n</StatusReport>'] to protobuf message [{
+  "nodeId": "34e6ef3c-29e6-40b4-8a5f-50c9baeb0575"
+}] with errors [['In message Timestamp, unexpected text in element', 'In message SapientMessage, unknown element StatusReport']]
+2026-08-13 05:51:18 [DEBUG] sapient_apex_server.translator.xml_to_bsi_flex_v1: Finished converting message [b'<StatusReport>\n    <timestamp>2024-02-09T16:17:27.538443Z</timestamp>\n    <sourceID>1</sourceID>\n    <reportID>1</reportID>\n    <system>OK</system>\n    <info>New</info>\n    <sensorLocation>\n        <location>\n            <X>50.78942393071742</X>\n            <Y>-1.11786027775316</Y>\n            <Z>0.0</Z>\n            <eX>0.0</eX>\n            <eY>0.0</eY>\n            <eZ>0.0</eZ>\n        </location>\n    </sensorLocation>\n</StatusReport>'] to protobuf message [{
+  "nodeId": "34e6ef3c-29e6-40b4-8a5f-50c9baeb0575"
+}]
+2026-08-13 05:51:18 [ERROR] sapient_apex_server.parse_xml: Errors encountered while parsing XML to proto: [In message Timestamp, unexpected text in element
+In message SapientMessage, unknown element StatusReport]
+2026-08-13 05:51:18 [DEBUG] apex: Writing None to 1 DMMs
+2026-08-13 05:51:18 [INFO] apex: Connection 2 fatal error: 
+2026-08-13 05:51:18 [INFO] apex: Connection 1 fatal error: 
+2026-08-13 05:51:18 [DEBUG] sapient_apex_server.translator.xml_to_bsi_flex_v1: Converting message [b'<SensorRegistration>\n    <timestamp>2024-02-09T16:17:27.521839Z</timestamp>\n    <sensorID>1</sensorID>\n    <sensorType>Silverfish : UGV</sensorType>\n    <name>DUMMY_ASM</name>\n    <capabilities Category="Wifi_interface" Type="NODE_TYPE_CYBER" Value="20" Units="dBm" />\n    <heartbeatDefinition>\n        <heartbeatInterval units="seconds" value="5" />\n        <sensorLocationDefinition>\n            <locationType units="decimal degrees-metres" datum="WGS84" zone="30n" north="True">GPS</locationType>\n        </sensorLocationDefinition>\n    </heartbeatDefinition>\n    <modeDefinition type="Permanent">\n        <modeName>Default</modeName>\n        <settleTime units="seconds" value="1" />\n        <scanType>Steerable</scanType>\n        <detectionDefinition>\n            <locationType units="decimal degrees-metres" datum="WGS84" zone="30n" north="True">GPS</locationType>\n            <geometricError type="Standard Deviation" units="meters" variationType="Linear with Range">\n                <performanceValue type="eRmin" value="0.1" />\n                <performanceValue type="eRmax" value="0.5" />\n            </geometricError>\n            <detectionReport category="detection" type="confidence" units="probability" onChange="0" />\n            <detectionClassDefinition>\n                <confidenceDefinition>Multiple Class</confidenceDefinition>\n                <classPerformance type="FAR" units="Per Period" unitValue="1" variationType="Linear with Range">\n                    <performanceValue type="eRmin" value="0.1" />\n                    <performanceValue type="eRmax" value="0.5" />\n                </classPerformance>\n                <classDefinition type="Human">\n                    <confidence units="probability" />\n                </classDefinition>\n                <classDefinition type="Vehicle">\n                    <confidence units="probability" />\n                </classDefinition>\n            </detectionClassDefinition>\n            <behaviourDefinition type="Walking">\n                <confidence units="probability" />\n            </behaviourDefinition>\n        </detectionDefinition>\n        <taskDefinition>\n            <regionDefinition>\n                <regionType>Area of Interest</regionType>\n                <locationType units="decimal degrees-metres" datum="WGS84" zone="30n" north="True">GPS</locationType>\n            </regionDefinition>\n            <command name="Request" units="Registration, Reset, Heartbeat, Stop, Start" completionTime="10" completionTimeUnits="seconds" />\n            <command name="LookAt" units="RangeBearing" completionTime="10" completionTimeUnits="seconds" />\n            <command name="GoTo" units="Location" completionTime="0" completionTimeUnits="seconds" />\n            <command name="NetSurv" units="surveyTask" completionTime="30" completionTimeUnits="seconds" />\n        </taskDefinition>\n    </modeDefinition>\n</SensorRegistration>' to protobuf
+2026-08-13 05:51:18 [DEBUG] sapient_apex_server.translator.xml_to_bsi_flex_v1: Converted message [b'<SensorRegistration>\n    <timestamp>2024-02-09T16:17:27.521839Z</timestamp>\n    <sensorID>1</sensorID>\n    <sensorType>Silverfish : UGV</sensorType>\n    <name>DUMMY_ASM</name>\n    <capabilities Category="Wifi_interface" Type="NODE_TYPE_CYBER" Value="20" Units="dBm" />\n    <heartbeatDefinition>\n        <heartbeatInterval units="seconds" value="5" />\n        <sensorLocationDefinition>\n            <locationType units="decimal degrees-metres" datum="WGS84" zone="30n" north="True">GPS</locationType>\n        </sensorLocationDefinition>\n    </heartbeatDefinition>\n    <modeDefinition type="Permanent">\n        <modeName>Default</modeName>\n        <settleTime units="seconds" value="1" />\n        <scanType>Steerable</scanType>\n        <detectionDefinition>\n            <locationType units="decimal degrees-metres" datum="WGS84" zone="30n" north="True">GPS</locationType>\n            <geometricError type="Standard Deviation" units="meters" variationType="Linear with Range">\n                <performanceValue type="eRmin" value="0.1" />\n                <performanceValue type="eRmax" value="0.5" />\n            </geometricError>\n            <detectionReport category="detection" type="confidence" units="probability" onChange="0" />\n            <detectionClassDefinition>\n                <confidenceDefinition>Multiple Class</confidenceDefinition>\n                <classPerformance type="FAR" units="Per Period" unitValue="1" variationType="Linear with Range">\n                    <performanceValue type="eRmin" value="0.1" />\n                    <performanceValue type="eRmax" value="0.5" />\n                </classPerformance>\n                <classDefinition type="Human">\n                    <confidence units="probability" />\n                </classDefinition>\n                <classDefinition type="Vehicle">\n                    <confidence units="probability" />\n                </classDefinition>\n            </detectionClassDefinition>\n            <behaviourDefinition type="Walking">\n                <confidence units="probability" />\n            </behaviourDefinition>\n        </detectionDefinition>\n        <taskDefinition>\n            <regionDefinition>\n                <regionType>Area of Interest</regionType>\n                <locationType units="decimal degrees-metres" datum="WGS84" zone="30n" north="True">GPS</locationType>\n            </regionDefinition>\n            <command name="Request" units="Registration, Reset, Heartbeat, Stop, Start" completionTime="10" completionTimeUnits="seconds" />\n            <command name="LookAt" units="RangeBearing" completionTime="10" completionTimeUnits="seconds" />\n            <command name="GoTo" units="Location" completionTime="0" completionTimeUnits="seconds" />\n            <command name="NetSurv" units="surveyTask" completionTime="30" completionTimeUnits="seconds" />\n        </taskDefinition>\n    </modeDefinition>\n</SensorRegistration>'] to protobuf message [{
+  "nodeId": "e989700e-6884-4917-a69b-39fcc581522e"
+}] with errors [['In message Timestamp, unexpected text in element', 'In message SapientMessage, unknown element SensorRegistration']]
+2026-08-13 05:51:18 [DEBUG] sapient_apex_server.translator.xml_to_bsi_flex_v1: Finished converting message [b'<SensorRegistration>\n    <timestamp>2024-02-09T16:17:27.521839Z</timestamp>\n    <sensorID>1</sensorID>\n    <sensorType>Silverfish : UGV</sensorType>\n    <name>DUMMY_ASM</name>\n    <capabilities Category="Wifi_interface" Type="NODE_TYPE_CYBER" Value="20" Units="dBm" />\n    <heartbeatDefinition>\n        <heartbeatInterval units="seconds" value="5" />\n        <sensorLocationDefinition>\n            <locationType units="decimal degrees-metres" datum="WGS84" zone="30n" north="True">GPS</locationType>\n        </sensorLocationDefinition>\n    </heartbeatDefinition>\n    <modeDefinition type="Permanent">\n        <modeName>Default</modeName>\n        <settleTime units="seconds" value="1" />\n        <scanType>Steerable</scanType>\n        <detectionDefinition>\n            <locationType units="decimal degrees-metres" datum="WGS84" zone="30n" north="True">GPS</locationType>\n            <geometricError type="Standard Deviation" units="meters" variationType="Linear with Range">\n                <performanceValue type="eRmin" value="0.1" />\n                <performanceValue type="eRmax" value="0.5" />\n            </geometricError>\n            <detectionReport category="detection" type="confidence" units="probability" onChange="0" />\n            <detectionClassDefinition>\n                <confidenceDefinition>Multiple Class</confidenceDefinition>\n                <classPerformance type="FAR" units="Per Period" unitValue="1" variationType="Linear with Range">\n                    <performanceValue type="eRmin" value="0.1" />\n                    <performanceValue type="eRmax" value="0.5" />\n                </classPerformance>\n                <classDefinition type="Human">\n                    <confidence units="probability" />\n                </classDefinition>\n                <classDefinition type="Vehicle">\n                    <confidence units="probability" />\n                </classDefinition>\n            </detectionClassDefinition>\n            <behaviourDefinition type="Walking">\n                <confidence units="probability" />\n            </behaviourDefinition>\n        </detectionDefinition>\n        <taskDefinition>\n            <regionDefinition>\n                <regionType>Area of Interest</regionType>\n                <locationType units="decimal degrees-metres" datum="WGS84" zone="30n" north="True">GPS</locationType>\n            </regionDefinition>\n            <command name="Request" units="Registration, Reset, Heartbeat, Stop, Start" completionTime="10" completionTimeUnits="seconds" />\n            <command name="LookAt" units="RangeBearing" completionTime="10" completionTimeUnits="seconds" />\n            <command name="GoTo" units="Location" completionTime="0" completionTimeUnits="seconds" />\n            <command name="NetSurv" units="surveyTask" completionTime="30" completionTimeUnits="seconds" />\n        </taskDefinition>\n    </modeDefinition>\n</SensorRegistration>'] to protobuf message [{
+  "nodeId": "e989700e-6884-4917-a69b-39fcc581522e"
+}]
+2026-08-13 05:51:18 [ERROR] sapient_apex_server.parse_xml: Errors encountered while parsing XML to proto: [In message Timestamp, unexpected text in element
+In message SapientMessage, unknown element SensorRegistration]
+2026-08-13 05:51:18 [INFO] apex: Connection 2 fatal error: 
+2026-08-13 05:51:18 [INFO] apex: Connection 1 fatal error: 
+2026-08-13 05:51:18 [DEBUG] sapient_apex_server.translator.bsi_flex_v1_to_xml: Converting message [{
+  "timestamp": "2024-02-09T16:17:27.521839Z",
+  "nodeId": "8cb1d098-74ba-4ddc-ab37-6bfbca14d582",
+  "registration": {
+    "nodeDefinition": [
+      {
+        "nodeType": "NODE_TYPE_OTHER",
+        "nodeSubType": [
+          "Silverfish : UGV"
+        ]
+      }
+    ],
+    "icdVersion": "BSI Flex 335 v1.0",
+    "name": "Silverfish : UGV",
+    "shortName": "DUMMY_ASM",
+    "capabilities": [
+      {
+        "category": "Wifi_interface",
+        "type": "NODE_TYPE_CYBER",
+        "value": "20",
+        "units": "dBm"
+      }
+    ],
+    "statusDefinition": {
+      "statusInterval": {
+        "units": "TIME_UNITS_SECONDS",
+        "value": 5.0
+      },
+      "locationDefinition": {
+        "locationUnits": "LOCATION_COORDINATE_SYSTEM_LAT_LNG_DEG_M",
+        "locationDatum": "LOCATION_DATUM_WGS84_E",
+        "zone": "30n"
+      }
+    },
+    "modeDefinition": [
+      {
+        "modeName": "Default",
+        "modeType": "MODE_TYPE_PERMANENT",
+        "settleTime": {
+          "units": "TIME_UNITS_SECONDS",
+          "value": 1.0
+        },
+        "scanType": "SCAN_TYPE_STEERABLE",
+        "detectionDefinition": {
+          "locationType": {
+            "locationUnits": "LOCATION_COORDINATE_SYSTEM_LAT_LNG_DEG_M",
+            "locationDatum": "LOCATION_DATUM_WGS84_E",
+            "zone": "30n"
+          },
+          "detectionReport": [
+            {
+              "category": "DETECTION_REPORT_CATEGORY_DETECTION",
+              "type": "confidence",
+              "units": "probability",
+              "onChange": false
+            }
+          ],
+          "detectionClassDefinition": [
+            {
+              "confidenceDefinition": "CONFIDENCE_DEFINITION_MULTI_CLASS",
+              "classPerformance": [
+                {
+                  "type": "FAR",
+                  "units": "Per Period",
+                  "unitValue": "1",
+                  "variationType": "Linear with Range"
+                }
+              ],
+              "classDefinition": [
+                {
+                  "type": "Human",
+                  "units": "probability"
+                },
+                {
+                  "type": "Vehicle",
+                  "units": "probability"
+                }
+              ]
+            }
+          ],
+          "behaviourDefinition": [
+            {
+              "type": "Walking",
+              "units": "probability"
+            }
+          ],
+          "geometricError": {
+            "type": "Standard Deviation",
+            "units": "meters",
+            "variationType": "Linear with Range",
+            "performanceValue": [
+              {
+                "type": "eRmin",
+                "units": "eRmin",
+                "unitValue": "0.1"
+              },
+              {
+                "type": "eRmax",
+                "units": "eRmax",
+                "unitValue": "0.5"
+              }
+            ]
+          }
+        },
+        "task": [
+          {
+            "regionDefinition": {
+              "regionType": [
+                "REGION_TYPE_AREA_OF_INTEREST"
+              ],
+              "regionArea": [
+                {
+                  "locationUnits": "LOCATION_COORDINATE_SYSTEM_LAT_LNG_DEG_M",
+                  "locationDatum": "LOCATION_DATUM_WGS84_E",
+                  "zone": "30n"
+                }
+              ]
+            },
+            "command": [
+              {
+                "name": "Request",
+                "units": "Registration, Reset, Heartbeat, Stop, Start",
+                "completionTime": {
+                  "units": "TIME_UNITS_SECONDS",
+                  "value": 10.0
+                },
+                "type": "COMMAND_TYPE_REQUEST"
+              },
+              {
+                "name": "LookAt",
+                "units": "RangeBearing",
+                "completionTime": {
+                  "units": "TIME_UNITS_SECONDS",
+                  "value": 10.0
+                },
+                "type": "COMMAND_TYPE_LOOK_AT"
+              },
+              {
+                "name": "Request",
+                "units": "Location",
+                "completionTime": {
+                  "units": "TIME_UNITS_SECONDS",
+                  "value": 0.0
+                },
+                "type": "COMMAND_TYPE_REQUEST"
+              },
+              {
+                "name": "Request",
+                "units": "surveyTask",
+                "completionTime": {
+                  "units": "TIME_UNITS_SECONDS",
+                  "value": 30.0
+                },
+                "type": "COMMAND_TYPE_REQUEST"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+} to XML
+2026-08-13 05:51:18 [DEBUG] sapient_apex_server.translator.bsi_flex_v1_to_xml: Completed protobuf message preprocessing of message [{
+  "timestamp": "2024-02-09T16:17:27.521839Z",
+  "nodeId": "8cb1d098-74ba-4ddc-ab37-6bfbca14d582",
+  "registration": {
+    "nodeDefinition": [
+      {
+        "nodeType": "NODE_TYPE_OTHER",
+        "nodeSubType": [
+          "Silverfish : UGV"
+        ]
+      }
+    ],
+    "icdVersion": "BSI Flex 335 v1.0",
+    "name": "Silverfish : UGV",
+    "shortName": "DUMMY_ASM",
+    "capabilities": [
+      {
+        "category": "Wifi_interface",
+        "type": "NODE_TYPE_CYBER",
+        "value": "20",
+        "units": "dBm"
+      }
+    ],
+    "statusDefinition": {
+      "statusInterval": {
+        "units": "TIME_UNITS_SECONDS",
+        "value": 5.0
+      },
+      "locationDefinition": {
+        "locationUnits": "LOCATION_COORDINATE_SYSTEM_LAT_LNG_DEG_M",
+        "locationDatum": "LOCATION_DATUM_WGS84_E",
+        "zone": "30n"
+      }
+    },
+    "modeDefinition": [
+      {
+        "modeName": "Default",
+        "modeType": "MODE_TYPE_PERMANENT",
+        "settleTime": {
+          "units": "TIME_UNITS_SECONDS",
+          "value": 1.0
+        },
+        "scanType": "SCAN_TYPE_STEERABLE",
+        "detectionDefinition": {
+          "locationType": {
+            "locationUnits": "LOCATION_COORDINATE_SYSTEM_LAT_LNG_DEG_M",
+            "locationDatum": "LOCATION_DATUM_WGS84_E",
+            "zone": "30n"
+          },
+          "detectionReport": [
+            {
+              "category": "DETECTION_REPORT_CATEGORY_DETECTION",
+              "type": "confidence",
+              "units": "probability",
+              "onChange": false
+            }
+          ],
+          "detectionClassDefinition": [
+            {
+              "confidenceDefinition": "CONFIDENCE_DEFINITION_MULTI_CLASS",
+              "classPerformance": [
+                {
+                  "type": "FAR",
+                  "units": "Per Period",
+                  "unitValue": "1",
+                  "variationType": "Linear with Range"
+                }
+              ],
+              "classDefinition": [
+                {
+                  "type": "Human",
+                  "units": "probability"
+                },
+                {
+                  "type": "Vehicle",
+                  "units": "probability"
+                }
+              ]
+            }
+          ],
+          "behaviourDefinition": [
+            {
+              "type": "Walking",
+              "units": "probability"
+            }
+          ],
+          "geometricError": {
+            "type": "Standard Deviation",
+            "units": "meters",
+            "variationType": "Linear with Range",
+            "performanceValue": [
+              {
+                "type": "eRmin",
+                "units": "eRmin",
+                "unitValue": "0.1"
+              },
+              {
+                "type": "eRmax",
+                "units": "eRmax",
+                "unitValue": "0.5"
+              }
+            ]
+          }
+        },
+        "task": [
+          {
+            "regionDefinition": {
+              "regionType": [
+                "REGION_TYPE_AREA_OF_INTEREST"
+              ],
+              "regionArea": [
+                {
+                  "locationUnits": "LOCATION_COORDINATE_SYSTEM_LAT_LNG_DEG_M",
+                  "locationDatum": "LOCATION_DATUM_WGS84_E",
+                  "zone": "30n"
+                }
+              ]
+            },
+            "command": [
+              {
+                "name": "Request",
+                "units": "Registration, Reset, Heartbeat, Stop, Start",
+                "completionTime": {
+                  "units": "TIME_UNITS_SECONDS",
+                  "value": 10.0
+                },
+                "type": "COMMAND_TYPE_REQUEST"
+              },
+              {
+                "name": "LookAt",
+                "units": "RangeBearing",
+                "completionTime": {
+                  "units": "TIME_UNITS_SECONDS",
+                  "value": 10.0
+                },
+                "type": "COMMAND_TYPE_LOOK_AT"
+              },
+              {
+                "name": "Request",
+                "units": "Location",
+                "completionTime": {
+                  "units": "TIME_UNITS_SECONDS",
+                  "value": 0.0
+                },
+                "type": "COMMAND_TYPE_REQUEST"
+              },
+              {
+                "name": "Request",
+                "units": "surveyTask",
+                "completionTime": {
+                  "units": "TIME_UNITS_SECONDS",
+                  "value": 30.0
+                },
+                "type": "COMMAND_TYPE_REQUEST"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+2026-08-13 05:51:18 [DEBUG] sapient_apex_server.translator.bsi_flex_v1_to_xml: Converted message [{
+  "timestamp": "2024-02-09T16:17:27.521839Z",
+  "nodeId": "8cb1d098-74ba-4ddc-ab37-6bfbca14d582",
+  "registration": {
+    "nodeDefinition": [
+      {
+        "nodeType": "NODE_TYPE_OTHER",
+        "nodeSubType": [
+          "Silverfish : UGV"
+        ]
+      }
+    ],
+    "icdVersion": "BSI Flex 335 v1.0",
+    "name": "Silverfish : UGV",
+    "shortName": "DUMMY_ASM",
+    "capabilities": [
+      {
+        "category": "Wifi_interface",
+        "type": "NODE_TYPE_CYBER",
+        "value": "20",
+        "units": "dBm"
+      }
+    ],
+    "statusDefinition": {
+      "statusInterval": {
+        "units": "TIME_UNITS_SECONDS",
+        "value": 5.0
+      },
+      "locationDefinition": {
+        "locationUnits": "LOCATION_COORDINATE_SYSTEM_LAT_LNG_DEG_M",
+        "locationDatum": "LOCATION_DATUM_WGS84_E",
+        "zone": "30n"
+      }
+    },
+    "modeDefinition": [
+      {
+        "modeName": "Default",
+        "modeType": "MODE_TYPE_PERMANENT",
+        "settleTime": {
+          "units": "TIME_UNITS_SECONDS",
+          "value": 1.0
+        },
+        "scanType": "SCAN_TYPE_STEERABLE",
+        "detectionDefinition": {
+          "locationType": {
+            "locationUnits": "LOCATION_COORDINATE_SYSTEM_LAT_LNG_DEG_M",
+            "locationDatum": "LOCATION_DATUM_WGS84_E",
+            "zone": "30n"
+          },
+          "detectionReport": [
+            {
+              "category": "DETECTION_REPORT_CATEGORY_DETECTION",
+              "type": "confidence",
+              "units": "probability",
+              "onChange": false
+            }
+          ],
+          "detectionClassDefinition": [
+            {
+              "confidenceDefinition": "CONFIDENCE_DEFINITION_MULTI_CLASS",
+              "classPerformance": [
+                {
+                  "type": "FAR",
+                  "units": "Per Period",
+                  "unitValue": "1",
+                  "variationType": "Linear with Range"
+                }
+              ],
+              "classDefinition": [
+                {
+                  "type": "Human",
+                  "units": "probability"
+                },
+                {
+                  "type": "Vehicle",
+                  "units": "probability"
+                }
+              ]
+            }
+          ],
+          "behaviourDefinition": [
+            {
+              "type": "Walking",
+              "units": "probability"
+            }
+          ],
+          "geometricError": {
+            "type": "Standard Deviation",
+            "units": "meters",
+            "variationType": "Linear with Range",
+            "performanceValue": [
+              {
+                "type": "eRmin",
+                "units": "eRmin",
+                "unitValue": "0.1"
+              },
+              {
+                "type": "eRmax",
+                "units": "eRmax",
+                "unitValue": "0.5"
+              }
+            ]
+          }
+        },
+        "task": [
+          {
+            "regionDefinition": {
+              "regionType": [
+                "REGION_TYPE_AREA_OF_INTEREST"
+              ],
+              "regionArea": [
+                {
+                  "locationUnits": "LOCATION_COORDINATE_SYSTEM_LAT_LNG_DEG_M",
+                  "locationDatum": "LOCATION_DATUM_WGS84_E",
+                  "zone": "30n"
+                }
+              ]
+            },
+            "command": [
+              {
+                "name": "Request",
+                "units": "Registration, Reset, Heartbeat, Stop, Start",
+                "completionTime": {
+                  "units": "TIME_UNITS_SECONDS",
+                  "value": 10.0
+                },
+                "type": "COMMAND_TYPE_REQUEST"
+              },
+              {
+                "name": "LookAt",
+                "units": "RangeBearing",
+                "completionTime": {
+                  "units": "TIME_UNITS_SECONDS",
+                  "value": 10.0
+                },
+                "type": "COMMAND_TYPE_LOOK_AT"
+              },
+              {
+                "name": "Request",
+                "units": "Location",
+                "completionTime": {
+                  "units": "TIME_UNITS_SECONDS",
+                  "value": 0.0
+                },
+                "type": "COMMAND_TYPE_REQUEST"
+              },
+              {
+                "name": "Request",
+                "units": "surveyTask",
+                "completionTime": {
+                  "units": "TIME_UNITS_SECONDS",
+                  "value": 30.0
+                },
+                "type": "COMMAND_TYPE_REQUEST"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}] to XML message [b'<Registration>\n  <nodeDefinition>\n    <nodeType>Other</nodeType>\n    <nodeSubType>Silverfish : UGV</nodeSubType>\n  </nodeDefinition>\n  <icdVersion>BSI Flex 335 v1.0</icdVersion>\n  <name>Silverfish : UGV</name>\n  <shortName>DUMMY_ASM</shortName>\n  <capabilities>\n    <category>Wifi_interface</category>\n    <type>NODE_TYPE_CYBER</type>\n    <value>20</value>\n    <units>dBm</units>\n  </capabilities>\n  <statusDefinition>\n    <statusInterval>\n      <units>Seconds</units>\n      <value>5.0</value>\n    </statusInterval>\n    <locationDefinition>\n      <locationUnits>Lat Lng Deg M</locationUnits>\n      <locationDatum>Wgs84 E</locationDatum>\n      <zone>30n</zone>\n    </locationDefinition>\n  </statusDefinition>\n  <modeDefinition>\n    <modeName>Default</modeName>\n    <modeType>Permanent</modeType>\n    <settleTime>\n      <units>Seconds</units>\n      <value>1.0</value>\n    </settleTime>\n    <scanType>Steerable</scanType>\n    <detectionDefinition>\n      <locationType>\n        <locationUnits>Lat Lng Deg M</locationUnits>\n        <locationDatum>Wgs84 E</locationDatum>\n        <zone>30n</zone>\n      </locationType>\n      <detectionReport>\n        <category>Detection</category>\n        <type>confidence</type>\n        <units>probability</units>\n        <onChange>false</onChange>\n      </detectionReport>\n      <detectionClassDefinition>\n        <confidenceDefinition>Multi Class</confidenceDefinition>\n        <classPerformance>\n          <type>FAR</type>\n          <units>Per Period</units>\n          <unitValue>1</unitValue>\n          <variationType>Linear with Range</variationType>\n        </classPerformance>\n        <classDefinition>\n          <type>Human</type>\n          <units>probability</units>\n        </classDefinition>\n        <classDefinition>\n          <type>Vehicle</type>\n          <units>probability</units>\n        </classDefinition>\n      </detectionClassDefinition>\n      <behaviourDefinition>\n        <type>Walking</type>\n        <units>probability</units>\n      </behaviourDefinition>\n      <geometricError>\n        <type>Standard Deviation</type>\n        <units>meters</units>\n        <variationType>Linear with Range</variationType>\n        <performanceValue>\n          <type>eRmin</type>\n          <units>eRmin</units>\n          <unitValue>0.1</unitValue>\n        </performanceValue>\n        <performanceValue>\n          <type>eRmax</type>\n          <units>eRmax</units>\n          <unitValue>0.5</unitValue>\n        </performanceValue>\n      </geometricError>\n    </detectionDefinition>\n    <task>\n      <regionDefinition>\n        <regionType>Area Of Interest</regionType>\n        <regionArea>\n          <locationUnits>Lat Lng Deg M</locationUnits>\n          <locationDatum>Wgs84 E</locationDatum>\n          <zone>30n</zone>\n        </regionArea>\n      </regionDefinition>\n      <command>\n        <name>Request</name>\n        <units>Registration, Reset, Heartbeat, Stop, Start</units>\n        <completionTime>\n          <units>Seconds</units>\n          <value>10.0</value>\n        </completionTime>\n        <type>Request</type>\n      </command>\n      <command>\n        <name>LookAt</name>\n        <units>RangeBearing</units>\n        <completionTime>\n          <units>Seconds</units>\n          <value>10.0</value>\n        </completionTime>\n        <type>Look At</type>\n      </command>\n      <command>\n        <name>Request</name>\n        <units>Location</units>\n        <completionTime>\n          <units>Seconds</units>\n          <value>0.0</value>\n        </completionTime>\n        <type>Request</type>\n      </command>\n      <command>\n        <name>Request</name>\n        <units>surveyTask</units>\n        <completionTime>\n          <units>Seconds</units>\n          <value>30.0</value>\n        </completionTime>\n        <type>Request</type>\n      </command>\n    </task>\n  </modeDefinition>\n</Registration>']
+2026-08-13 05:51:18 [DEBUG] sapient_apex_server.translator.bsi_flex_v1_to_xml: Finished converting message [{
+  "timestamp": "2024-02-09T16:17:27.521839Z",
+  "nodeId": "8cb1d098-74ba-4ddc-ab37-6bfbca14d582",
+  "registration": {
+    "nodeDefinition": [
+      {
+        "nodeType": "NODE_TYPE_OTHER",
+        "nodeSubType": [
+          "Silverfish : UGV"
+        ]
+      }
+    ],
+    "icdVersion": "BSI Flex 335 v1.0",
+    "name": "Silverfish : UGV",
+    "shortName": "DUMMY_ASM",
+    "capabilities": [
+      {
+        "category": "Wifi_interface",
+        "type": "NODE_TYPE_CYBER",
+        "value": "20",
+        "units": "dBm"
+      }
+    ],
+    "statusDefinition": {
+      "statusInterval": {
+        "units": "TIME_UNITS_SECONDS",
+        "value": 5.0
+      },
+      "locationDefinition": {
+        "locationUnits": "LOCATION_COORDINATE_SYSTEM_LAT_LNG_DEG_M",
+        "locationDatum": "LOCATION_DATUM_WGS84_E",
+        "zone": "30n"
+      }
+    },
+    "modeDefinition": [
+      {
+        "modeName": "Default",
+        "modeType": "MODE_TYPE_PERMANENT",
+        "settleTime": {
+          "units": "TIME_UNITS_SECONDS",
+          "value": 1.0
+        },
+        "scanType": "SCAN_TYPE_STEERABLE",
+        "detectionDefinition": {
+          "locationType": {
+            "locationUnits": "LOCATION_COORDINATE_SYSTEM_LAT_LNG_DEG_M",
+            "locationDatum": "LOCATION_DATUM_WGS84_E",
+            "zone": "30n"
+          },
+          "detectionReport": [
+            {
+              "category": "DETECTION_REPORT_CATEGORY_DETECTION",
+              "type": "confidence",
+              "units": "probability",
+              "onChange": false
+            }
+          ],
+          "detectionClassDefinition": [
+            {
+              "confidenceDefinition": "CONFIDENCE_DEFINITION_MULTI_CLASS",
+              "classPerformance": [
+                {
+                  "type": "FAR",
+                  "units": "Per Period",
+                  "unitValue": "1",
+                  "variationType": "Linear with Range"
+                }
+              ],
+              "classDefinition": [
+                {
+                  "type": "Human",
+                  "units": "probability"
+                },
+                {
+                  "type": "Vehicle",
+                  "units": "probability"
+                }
+              ]
+            }
+          ],
+          "behaviourDefinition": [
+            {
+              "type": "Walking",
+              "units": "probability"
+            }
+          ],
+          "geometricError": {
+            "type": "Standard Deviation",
+            "units": "meters",
+            "variationType": "Linear with Range",
+            "performanceValue": [
+              {
+                "type": "eRmin",
+                "units": "eRmin",
+                "unitValue": "0.1"
+              },
+              {
+                "type": "eRmax",
+                "units": "eRmax",
+                "unitValue": "0.5"
+              }
+            ]
+          }
+        },
+        "task": [
+          {
+            "regionDefinition": {
+              "regionType": [
+                "REGION_TYPE_AREA_OF_INTEREST"
+              ],
+              "regionArea": [
+                {
+                  "locationUnits": "LOCATION_COORDINATE_SYSTEM_LAT_LNG_DEG_M",
+                  "locationDatum": "LOCATION_DATUM_WGS84_E",
+                  "zone": "30n"
+                }
+              ]
+            },
+            "command": [
+              {
+                "name": "Request",
+                "units": "Registration, Reset, Heartbeat, Stop, Start",
+                "completionTime": {
+                  "units": "TIME_UNITS_SECONDS",
+                  "value": 10.0
+                },
+                "type": "COMMAND_TYPE_REQUEST"
+              },
+              {
+                "name": "LookAt",
+                "units": "RangeBearing",
+                "completionTime": {
+                  "units": "TIME_UNITS_SECONDS",
+                  "value": 10.0
+                },
+                "type": "COMMAND_TYPE_LOOK_AT"
+              },
+              {
+                "name": "Request",
+                "units": "Location",
+                "completionTime": {
+                  "units": "TIME_UNITS_SECONDS",
+                  "value": 0.0
+                },
+                "type": "COMMAND_TYPE_REQUEST"
+              },
+              {
+                "name": "Request",
+                "units": "surveyTask",
+                "completionTime": {
+                  "units": "TIME_UNITS_SECONDS",
+                  "value": 30.0
+                },
+                "type": "COMMAND_TYPE_REQUEST"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}] to XML message [b'<Registration>\n  <nodeDefinition>\n    <nodeType>Other</nodeType>\n    <nodeSubType>Silverfish : UGV</nodeSubType>\n  </nodeDefinition>\n  <icdVersion>BSI Flex 335 v1.0</icdVersion>\n  <name>Silverfish : UGV</name>\n  <shortName>DUMMY_ASM</shortName>\n  <capabilities>\n    <category>Wifi_interface</category>\n    <type>NODE_TYPE_CYBER</type>\n    <value>20</value>\n    <units>dBm</units>\n  </capabilities>\n  <statusDefinition>\n    <statusInterval>\n      <units>Seconds</units>\n      <value>5.0</value>\n    </statusInterval>\n    <locationDefinition>\n      <locationUnits>Lat Lng Deg M</locationUnits>\n      <locationDatum>Wgs84 E</locationDatum>\n      <zone>30n</zone>\n    </locationDefinition>\n  </statusDefinition>\n  <modeDefinition>\n    <modeName>Default</modeName>\n    <modeType>Permanent</modeType>\n    <settleTime>\n      <units>Seconds</units>\n      <value>1.0</value>\n    </settleTime>\n    <scanType>Steerable</scanType>\n    <detectionDefinition>\n      <locationType>\n        <locationUnits>Lat Lng Deg M</locationUnits>\n        <locationDatum>Wgs84 E</locationDatum>\n        <zone>30n</zone>\n      </locationType>\n      <detectionReport>\n        <category>Detection</category>\n        <type>confidence</type>\n        <units>probability</units>\n        <onChange>false</onChange>\n      </detectionReport>\n      <detectionClassDefinition>\n        <confidenceDefinition>Multi Class</confidenceDefinition>\n        <classPerformance>\n          <type>FAR</type>\n          <units>Per Period</units>\n          <unitValue>1</unitValue>\n          <variationType>Linear with Range</variationType>\n        </classPerformance>\n        <classDefinition>\n          <type>Human</type>\n          <units>probability</units>\n        </classDefinition>\n        <classDefinition>\n          <type>Vehicle</type>\n          <units>probability</units>\n        </classDefinition>\n      </detectionClassDefinition>\n      <behaviourDefinition>\n        <type>Walking</type>\n        <units>probability</units>\n      </behaviourDefinition>\n      <geometricError>\n        <type>Standard Deviation</type>\n        <units>meters</units>\n        <variationType>Linear with Range</variationType>\n        <performanceValue>\n          <type>eRmin</type>\n          <units>eRmin</units>\n          <unitValue>0.1</unitValue>\n        </performanceValue>\n        <performanceValue>\n          <type>eRmax</type>\n          <units>eRmax</units>\n          <unitValue>0.5</unitValue>\n        </performanceValue>\n      </geometricError>\n    </detectionDefinition>\n    <task>\n      <regionDefinition>\n        <regionType>Area Of Interest</regionType>\n        <regionArea>\n          <locationUnits>Lat Lng Deg M</locationUnits>\n          <locationDatum>Wgs84 E</locationDatum>\n          <zone>30n</zone>\n        </regionArea>\n      </regionDefinition>\n      <command>\n        <name>Request</name>\n        <units>Registration, Reset, Heartbeat, Stop, Start</units>\n        <completionTime>\n          <units>Seconds</units>\n          <value>10.0</value>\n        </completionTime>\n        <type>Request</type>\n      </command>\n      <command>\n        <name>LookAt</name>\n        <units>RangeBearing</units>\n        <completionTime>\n          <units>Seconds</units>\n          <value>10.0</value>\n        </completionTime>\n        <type>Look At</type>\n      </command>\n      <command>\n        <name>Request</name>\n        <units>Location</units>\n        <completionTime>\n          <units>Seconds</units>\n          <value>0.0</value>\n        </completionTime>\n        <type>Request</type>\n      </command>\n      <command>\n        <name>Request</name>\n        <units>surveyTask</units>\n        <completionTime>\n          <units>Seconds</units>\n          <value>30.0</value>\n        </completionTime>\n        <type>Request</type>\n      </command>\n    </task>\n  </modeDefinition>\n  <timestamp>2024-02-09T16:17:27.521839Z</timestamp>\n  <sensorID>1000001</sensorID>\n</Registration>']
+2026-08-13 05:51:18 [DEBUG] sapient_apex_server.translator.bsi_flex_v1_to_xml: Converting message [{
+  "timestamp": "2024-02-09T16:17:41.577384Z",
+  "nodeId": "8cb1d098-74ba-4ddc-ab37-6bfbca14d582",
+  "detectionReport": {
+    "reportId": "01HPEKBXJSMRBM8E32STY8MRX5",
+    "objectId": "01HPEKBXJSB6WY59ZZ2GH4QF76",
+    "taskId": "01HPEKBXJSNYV36Q2FYWPRDMCJ",
+    "location": {
+      "x": 50.78942393071742,
+      "y": -1.11786027775316,
+      "z": 0.0,
+      "coordinateSystem": "LOCATION_COORDINATE_SYSTEM_UNSPECIFIED",
+      "datum": "LOCATION_DATUM_UNSPECIFIED"
+    }
+  }
+} to XML
+2026-08-13 05:51:18 [DEBUG] sapient_apex_server.translator.bsi_flex_v1_to_xml: Completed protobuf message preprocessing of message [{
+  "timestamp": "2024-02-09T16:17:41.577384Z",
+  "nodeId": "8cb1d098-74ba-4ddc-ab37-6bfbca14d582",
+  "detectionReport": {
+    "reportId": "01HPEKBXJSMRBM8E32STY8MRX5",
+    "objectId": "01HPEKBXJSB6WY59ZZ2GH4QF76",
+    "taskId": "01HPEKBXJSNYV36Q2FYWPRDMCJ",
+    "location": {
+      "x": 50.78942393071742,
+      "y": -1.11786027775316,
+      "z": 0.0,
+      "coordinateSystem": "LOCATION_COORDINATE_SYSTEM_UNSPECIFIED",
+      "datum": "LOCATION_DATUM_UNSPECIFIED"
+    }
+  }
+}
+2026-08-13 05:51:18 [DEBUG] sapient_apex_server.translator.bsi_flex_v1_to_xml: Converted message [{
+  "timestamp": "2024-02-09T16:17:41.577384Z",
+  "nodeId": "8cb1d098-74ba-4ddc-ab37-6bfbca14d582",
+  "detectionReport": {
+    "reportId": "01HPEKBXJSMRBM8E32STY8MRX5",
+    "objectId": "01HPEKBXJSB6WY59ZZ2GH4QF76",
+    "taskId": "01HPEKBXJSNYV36Q2FYWPRDMCJ",
+    "location": {
+      "x": 50.78942393071742,
+      "y": -1.11786027775316,
+      "z": 0.0,
+      "coordinateSystem": "LOCATION_COORDINATE_SYSTEM_UNSPECIFIED",
+      "datum": "LOCATION_DATUM_UNSPECIFIED"
+    }
+  }
+}] to XML message [b'<DetectionReport>\n  <reportId>01HPEKBXJSMRBM8E32STY8MRX5</reportId>\n  <objectId>01HPEKBXJSB6WY59ZZ2GH4QF76</objectId>\n  <taskId>01HPEKBXJSNYV36Q2FYWPRDMCJ</taskId>\n  <location>\n    <x>50.78942393071742</x>\n    <y>-1.11786027775316</y>\n    <z>0.0</z>\n    <coordinateSystem>Unspecified</coordinateSystem>\n    <datum>Unspecified</datum>\n  </location>\n</DetectionReport>']
+2026-08-13 05:51:18 [DEBUG] sapient_apex_server.translator.bsi_flex_v1_to_xml: Finished converting message [{
+  "timestamp": "2024-02-09T16:17:41.577384Z",
+  "nodeId": "8cb1d098-74ba-4ddc-ab37-6bfbca14d582",
+  "detectionReport": {
+    "reportId": "01HPEKBXJSMRBM8E32STY8MRX5",
+    "objectId": "01HPEKBXJSB6WY59ZZ2GH4QF76",
+    "taskId": "01HPEKBXJSNYV36Q2FYWPRDMCJ",
+    "location": {
+      "x": 50.78942393071742,
+      "y": -1.11786027775316,
+      "z": 0.0,
+      "coordinateSystem": "LOCATION_COORDINATE_SYSTEM_UNSPECIFIED",
+      "datum": "LOCATION_DATUM_UNSPECIFIED"
+    }
+  }
+}] to XML message [b'<DetectionReport>\n  <reportId>01HPEKBXJSMRBM8E32STY8MRX5</reportId>\n  <objectId>01HPEKBXJSB6WY59ZZ2GH4QF76</objectId>\n  <taskId>01HPEKBXJSNYV36Q2FYWPRDMCJ</taskId>\n  <location>\n    <x>50.78942393071742</x>\n    <y>-1.11786027775316</y>\n    <z>0.0</z>\n    <coordinateSystem>Unspecified</coordinateSystem>\n    <datum>Unspecified</datum>\n  </location>\n  <timestamp>2024-02-09T16:17:41.577384Z</timestamp>\n  <sourceID>1000001</sourceID>\n</DetectionReport>']
+2026-08-13 05:51:18 [DEBUG] apex: Writing detection_report to 1 DMMs
+2026-08-13 05:51:18 [DEBUG] sapient_apex_server.translator.bsi_flex_v1_to_xml: Converting message [{
+  "timestamp": "2024-02-09T16:17:27.538443Z",
+  "nodeId": "8cb1d098-74ba-4ddc-ab37-6bfbca14d582",
+  "statusReport": {
+    "reportId": "01HPEM0345M2F3PHMB1NXN1MHG",
+    "system": "SYSTEM_OK",
+    "info": "INFO_NEW",
+    "nodeLocation": {
+      "x": 50.78942393071742,
+      "y": -1.11786027775316,
+      "z": 0.0,
+      "xError": 0.0,
+      "yError": 0.0,
+      "zError": 0.0,
+      "coordinateSystem": "LOCATION_COORDINATE_SYSTEM_UNSPECIFIED",
+      "datum": "LOCATION_DATUM_UNSPECIFIED"
+    }
+  }
+} to XML
+2026-08-13 05:51:18 [DEBUG] sapient_apex_server.translator.bsi_flex_v1_to_xml: Completed protobuf message preprocessing of message [{
+  "timestamp": "2024-02-09T16:17:27.538443Z",
+  "nodeId": "8cb1d098-74ba-4ddc-ab37-6bfbca14d582",
+  "statusReport": {
+    "reportId": "01HPEM0345M2F3PHMB1NXN1MHG",
+    "system": "SYSTEM_OK",
+    "info": "INFO_NEW",
+    "nodeLocation": {
+      "x": 50.78942393071742,
+      "y": -1.11786027775316,
+      "z": 0.0,
+      "xError": 0.0,
+      "yError": 0.0,
+      "zError": 0.0,
+      "coordinateSystem": "LOCATION_COORDINATE_SYSTEM_UNSPECIFIED",
+      "datum": "LOCATION_DATUM_UNSPECIFIED"
+    }
+  }
+}
+2026-08-13 05:51:18 [DEBUG] sapient_apex_server.translator.bsi_flex_v1_to_xml: Converted message [{
+  "timestamp": "2024-02-09T16:17:27.538443Z",
+  "nodeId": "8cb1d098-74ba-4ddc-ab37-6bfbca14d582",
+  "statusReport": {
+    "reportId": "01HPEM0345M2F3PHMB1NXN1MHG",
+    "system": "SYSTEM_OK",
+    "info": "INFO_NEW",
+    "nodeLocation": {
+      "x": 50.78942393071742,
+      "y": -1.11786027775316,
+      "z": 0.0,
+      "xError": 0.0,
+      "yError": 0.0,
+      "zError": 0.0,
+      "coordinateSystem": "LOCATION_COORDINATE_SYSTEM_UNSPECIFIED",
+      "datum": "LOCATION_DATUM_UNSPECIFIED"
+    }
+  }
+}] to XML message [b'<StatusReport>\n  <reportId>01HPEM0345M2F3PHMB1NXN1MHG</reportId>\n  <system>Ok</system>\n  <info>New</info>\n  <nodeLocation>\n    <x>50.78942393071742</x>\n    <y>-1.11786027775316</y>\n    <z>0.0</z>\n    <xError>0.0</xError>\n    <yError>0.0</yError>\n    <zError>0.0</zError>\n    <coordinateSystem>Unspecified</coordinateSystem>\n    <datum>Unspecified</datum>\n  </nodeLocation>\n</StatusReport>']
+2026-08-13 05:51:18 [DEBUG] sapient_apex_server.translator.bsi_flex_v1_to_xml: Finished converting message [{
+  "timestamp": "2024-02-09T16:17:27.538443Z",
+  "nodeId": "8cb1d098-74ba-4ddc-ab37-6bfbca14d582",
+  "statusReport": {
+    "reportId": "01HPEM0345M2F3PHMB1NXN1MHG",
+    "system": "SYSTEM_OK",
+    "info": "INFO_NEW",
+    "nodeLocation": {
+      "x": 50.78942393071742,
+      "y": -1.11786027775316,
+      "z": 0.0,
+      "xError": 0.0,
+      "yError": 0.0,
+      "zError": 0.0,
+      "coordinateSystem": "LOCATION_COORDINATE_SYSTEM_UNSPECIFIED",
+      "datum": "LOCATION_DATUM_UNSPECIFIED"
+    }
+  }
+}] to XML message [b'<StatusReport>\n  <reportId>01HPEM0345M2F3PHMB1NXN1MHG</reportId>\n  <system>Ok</system>\n  <info>New</info>\n  <nodeLocation>\n    <x>50.78942393071742</x>\n    <y>-1.11786027775316</y>\n    <z>0.0</z>\n    <xError>0.0</xError>\n    <yError>0.0</yError>\n    <zError>0.0</zError>\n    <coordinateSystem>Unspecified</coordinateSystem>\n    <datum>Unspecified</datum>\n  </nodeLocation>\n  <timestamp>2024-02-09T16:17:27.538443Z</timestamp>\n  <sourceID>1000001</sourceID>\n</StatusReport>']
+2026-08-13 05:51:18 [DEBUG] apex: Writing status_report to 1 DMMs
+2026-08-13 05:51:18 [INFO] apex: Connection 1 fatal error: 
+2026-08-13 05:51:18 [INFO] apex: Connection 2 fatal error: 
